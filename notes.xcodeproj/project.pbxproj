@@ -7,18 +7,48 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4084F8928B0CBCD00B942E5 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4084F8828B0CBCD00B942E5 /* MapView.swift */; };
+		D42BAD8328754F5000F6E98F /* NotesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42BAD8228754F5000F6E98F /* NotesStore.swift */; };
+		D45A6EAD2875CAEE002B1DB5 /* NoteFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */; };
+		D471E5E728C29A3000E729DE /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D471E5E928C29A3000E729DE /* InfoPlist.strings */; };
+		D484E021288D4C3500A9A9A8 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D484E020288D4C3500A9A9A8 /* NotificationManager.swift */; };
+		D4866D0328B0EA1500A37460 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4866D0228B0EA1500A37460 /* LocationManager.swift */; };
+		D48C11092882F665004033DE /* NoteListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48C11082882F665004033DE /* NoteListView.swift */; };
+		D493FC5228840E790015030F /* NotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D493FC5128840E790015030F /* NotesView.swift */; };
+		D493FC5428840F8F0015030F /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D493FC5328840F8F0015030F /* CalendarView.swift */; };
 		D4A02B972874A72E0009830B /* notesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A02B962874A72E0009830B /* notesApp.swift */; };
 		D4A02B992874A72E0009830B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A02B982874A72E0009830B /* ContentView.swift */; };
 		D4A02B9B2874A7300009830B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4A02B9A2874A7300009830B /* Assets.xcassets */; };
 		D4A02B9E2874A7300009830B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D4A02B9D2874A7300009830B /* Preview Assets.xcassets */; };
+		D4A02BA62874A7970009830B /* NoteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A02BA52874A7970009830B /* NoteModel.swift */; };
+		D4A02BAA2874ACDB0009830B /* NoteRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A02BA92874ACDB0009830B /* NoteRowView.swift */; };
+		D4A02BAE2874AFAC0009830B /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A02BAD2874AFAC0009830B /* NoteDetailView.swift */; };
+		D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AD7F0E28816A32001D5A03 /* LaunchScreenView.swift */; };
+		D4BCED792878022A00AA2B8C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4BCED7B2878022A00AA2B8C /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		D4A02B932874A72E0009830B /* notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4084F8828B0CBCD00B942E5 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		D42BAD8228754F5000F6E98F /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
+		D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteFormView.swift; sourceTree = "<group>"; };
+		D471E5E828C29A3000E729DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D471E5EA28C29A3400E729DE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		D484E020288D4C3500A9A9A8 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		D4866D0228B0EA1500A37460 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		D48C11082882F665004033DE /* NoteListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteListView.swift; sourceTree = "<group>"; };
+		D493FC5128840E790015030F /* NotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesView.swift; sourceTree = "<group>"; };
+		D493FC5328840F8F0015030F /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		D4A02B932874A72E0009830B /* J-Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "J-Notes.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4A02B962874A72E0009830B /* notesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = notesApp.swift; sourceTree = "<group>"; };
 		D4A02B982874A72E0009830B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D4A02B9A2874A7300009830B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D4A02B9D2874A7300009830B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		D4A02BA52874A7970009830B /* NoteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteModel.swift; sourceTree = "<group>"; };
+		D4A02BA92874ACDB0009830B /* NoteRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteRowView.swift; sourceTree = "<group>"; };
+		D4A02BAD2874AFAC0009830B /* NoteDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDetailView.swift; sourceTree = "<group>"; };
+		D4AD7F0E28816A32001D5A03 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
+		D4BCED7A2878022A00AA2B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D4BCED7C2878023200AA2B8C /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +62,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D42BAD8128754EEF00F6E98F /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				D42BAD8228754F5000F6E98F /* NotesStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		D484E01F288D4BF800A9A9A8 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				D4866D0228B0EA1500A37460 /* LocationManager.swift */,
+				D484E020288D4C3500A9A9A8 /* NotificationManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
 		D4A02B8A2874A72E0009830B = {
 			isa = PBXGroup;
 			children = (
@@ -43,7 +90,7 @@
 		D4A02B942874A72E0009830B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D4A02B932874A72E0009830B /* notes.app */,
+				D4A02B932874A72E0009830B /* J-Notes.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -51,9 +98,14 @@
 		D4A02B952874A72E0009830B /* notes */ = {
 			isa = PBXGroup;
 			children = (
+				D484E01F288D4BF800A9A9A8 /* Managers */,
+				D4A02BA42874A7840009830B /* Models */,
+				D42BAD8128754EEF00F6E98F /* Stores */,
+				D4A02BA72874A8730009830B /* Views */,
 				D4A02B962874A72E0009830B /* notesApp.swift */,
-				D4A02B982874A72E0009830B /* ContentView.swift */,
 				D4A02B9A2874A7300009830B /* Assets.xcassets */,
+				D471E5E928C29A3000E729DE /* InfoPlist.strings */,
+				D4BCED7B2878022A00AA2B8C /* Localizable.strings */,
 				D4A02B9C2874A7300009830B /* Preview Content */,
 			);
 			path = notes;
@@ -65,6 +117,38 @@
 				D4A02B9D2874A7300009830B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		D4A02BA42874A7840009830B /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D4A02BA52874A7970009830B /* NoteModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D4A02BA72874A8730009830B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D4A02BAC2874AF880009830B /* Notes */,
+				D493FC5328840F8F0015030F /* CalendarView.swift */,
+				D4A02B982874A72E0009830B /* ContentView.swift */,
+				D4AD7F0E28816A32001D5A03 /* LaunchScreenView.swift */,
+				D4084F8828B0CBCD00B942E5 /* MapView.swift */,
+				D493FC5128840E790015030F /* NotesView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D4A02BAC2874AF880009830B /* Notes */ = {
+			isa = PBXGroup;
+			children = (
+				D4A02BAD2874AFAC0009830B /* NoteDetailView.swift */,
+				D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */,
+				D48C11082882F665004033DE /* NoteListView.swift */,
+				D4A02BA92874ACDB0009830B /* NoteRowView.swift */,
+			);
+			path = Notes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -84,7 +168,7 @@
 			);
 			name = notes;
 			productName = notes;
-			productReference = D4A02B932874A72E0009830B /* notes.app */;
+			productReference = D4A02B932874A72E0009830B /* J-Notes.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -109,6 +193,7 @@
 			knownRegions = (
 				en,
 				Base,
+				cs,
 			);
 			mainGroup = D4A02B8A2874A72E0009830B;
 			productRefGroup = D4A02B942874A72E0009830B /* Products */;
@@ -126,6 +211,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4A02B9E2874A7300009830B /* Preview Assets.xcassets in Resources */,
+				D471E5E728C29A3000E729DE /* InfoPlist.strings in Resources */,
+				D4BCED792878022A00AA2B8C /* Localizable.strings in Resources */,
 				D4A02B9B2874A7300009830B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,12 +224,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D42BAD8328754F5000F6E98F /* NotesStore.swift in Sources */,
 				D4A02B992874A72E0009830B /* ContentView.swift in Sources */,
+				D493FC5228840E790015030F /* NotesView.swift in Sources */,
+				D48C11092882F665004033DE /* NoteListView.swift in Sources */,
+				D4084F8928B0CBCD00B942E5 /* MapView.swift in Sources */,
+				D484E021288D4C3500A9A9A8 /* NotificationManager.swift in Sources */,
 				D4A02B972874A72E0009830B /* notesApp.swift in Sources */,
+				D45A6EAD2875CAEE002B1DB5 /* NoteFormView.swift in Sources */,
+				D493FC5428840F8F0015030F /* CalendarView.swift in Sources */,
+				D4A02BAA2874ACDB0009830B /* NoteRowView.swift in Sources */,
+				D4866D0328B0EA1500A37460 /* LocationManager.swift in Sources */,
+				D4A02BA62874A7970009830B /* NoteModel.swift in Sources */,
+				D4A02BAE2874AFAC0009830B /* NoteDetailView.swift in Sources */,
+				D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		D471E5E928C29A3000E729DE /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D471E5E828C29A3000E729DE /* en */,
+				D471E5EA28C29A3400E729DE /* cs */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		D4BCED7B2878022A00AA2B8C /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4BCED7A2878022A00AA2B8C /* en */,
+				D4BCED7C2878023200AA2B8C /* cs */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		D4A02B9F2874A7300009830B /* Debug */ = {
@@ -270,6 +390,7 @@
 				DEVELOPMENT_TEAM = K6GM85X5D7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to location?";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -279,9 +400,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "J-Notes";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -299,6 +422,7 @@
 				DEVELOPMENT_TEAM = K6GM85X5D7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to location?";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -308,9 +432,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "J-Notes";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

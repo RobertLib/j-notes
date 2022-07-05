@@ -1,0 +1,26 @@
+/* 
+  Localizable.strings
+  notes
+
+  Created by Robert Libšanský on 08.07.2022.
+  
+*/
+
+"calendar" = "Calendar";
+"cancel" = "Cancel";
+"color" = "Color";
+"content" = "Content";
+"contentError" = "The content must not remain empty 😜";
+"delete" = "Delete";
+"deleteNoteConfirm" = "Do you really want to delete the note?";
+"editNote" = "Edit note";
+"list" = "List";
+"map" = "Map";
+"new" = "New";
+"newNote" = "New note";
+"noNotes" = "No notes";
+"notes" = "J-Notes";
+"pinned" = "Pinned";
+"reminder" = "Reminder";
+"save" = "Save";
+"title" = "Title";

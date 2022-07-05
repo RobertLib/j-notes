@@ -1,0 +1,26 @@
+/* 
+  Localizable.strings
+  notes
+
+  Created by Robert Libšanský on 08.07.2022.
+  
+*/
+
+"calendar" = "Kalendář";
+"cancel" = "Zrušit";
+"color" = "Barva";
+"content" = "Obsah";
+"contentError" = "Obsah nesmí zůstat prázdný 😜";
+"delete" = "Smazat";
+"deleteNoteConfirm" = "Opravdu chcete smazat poznámku?";
+"editNote" = "Upravit poznámku";
+"list" = "Seznam";
+"map" = "Mapa";
+"new" = "Nový";
+"newNote" = "Nová poznámka";
+"noNotes" = "Žádné poznámky";
+"notes" = "J-Poznámky";
+"pinned" = "Připnutý";
+"reminder" = "Připomínka";
+"save" = "Uložit";
+"title" = "Nadpis";
