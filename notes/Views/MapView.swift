@@ -13,11 +13,12 @@ struct MapView: View {
     @EnvironmentObject private var notesStore: NotesStore
     
     @State private var selectedNote: NoteModel? = nil
+    @State private var mapRegion = MKCoordinateRegion()
     
     var body: some View {
         ZStack(alignment: .topTrailing) {
             Map(
-                coordinateRegion: $locationManager.region,
+                coordinateRegion: $mapRegion,
                 annotationItems: notesStore.notes,
                 annotationContent: { note in
                     MapAnnotation(coordinate: note.coordinate) {
@@ -38,6 +39,12 @@ struct MapView: View {
             .edgesIgnoringSafeArea(.top)
             .sheet(item: $selectedNote) { note in
                 NoteDetailView(note: note, fromMap: true)
+            }
+            .onAppear {
+                self.mapRegion = locationManager.region
+            }
+            .onReceive(locationManager.$region) { newRegion in
+                self.mapRegion = newRegion
             }
             
             Button {

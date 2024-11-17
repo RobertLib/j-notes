@@ -50,21 +50,20 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
     }
     
     var isAuthorized: Bool {
-        if CLLocationManager.locationServicesEnabled() {
-            switch manager.authorizationStatus {
-            case .authorizedAlways, .authorizedWhenInUse:
-                return true
-            default:
-                return false
-            }
+        switch manager.authorizationStatus {
+        case .authorizedAlways, .authorizedWhenInUse:
+            return true
+        default:
+            return false
         }
-        
-        return false
     }
     
     func requestLocation() {
         manager.requestWhenInUseAuthorization()
-        manager.requestLocation()
+        
+        if isAuthorized {
+            manager.requestLocation()
+        }
     }
     
     func locationManager(

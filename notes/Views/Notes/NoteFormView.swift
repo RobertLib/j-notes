@@ -108,7 +108,7 @@ struct NoteFormView: View {
                     }
                     
                     TextEditor(text: $content)
-                        .frame(minHeight: 225)
+                        .frame(minHeight: 125)
                         .offset(x: -5)
                         .alert(
                             "contentError",
