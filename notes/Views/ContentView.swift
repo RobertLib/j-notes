@@ -22,6 +22,7 @@ struct ContentView: View {
                 Label("map", systemImage: "map")
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 

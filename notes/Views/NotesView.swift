@@ -67,6 +67,7 @@ struct NotesView: View {
             )
             .searchable(text: $searchText)
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
