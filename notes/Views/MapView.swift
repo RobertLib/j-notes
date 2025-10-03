@@ -11,17 +11,15 @@ import SwiftUI
 struct MapView: View {
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var notesStore: NotesStore
-    
+
     @State private var selectedNote: NoteModel? = nil
-    @State private var mapRegion = MKCoordinateRegion()
-    
+    @State private var position: MapCameraPosition = .automatic
+
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            Map(
-                coordinateRegion: $mapRegion,
-                annotationItems: notesStore.notes,
-                annotationContent: { note in
-                    MapAnnotation(coordinate: note.coordinate) {
+            Map(position: $position) {
+                ForEach(notesStore.notes) { note in
+                    Annotation(note.title, coordinate: note.coordinate) {
                         Button {
                             selectedNote = note
                         } label: {
@@ -35,18 +33,19 @@ struct MapView: View {
                         }
                     }
                 }
-            )
-            .edgesIgnoringSafeArea(.top)
+            }
+            .mapStyle(.standard)
+            .ignoresSafeArea(.all, edges: .top)
             .sheet(item: $selectedNote) { note in
                 NoteDetailView(note: note, fromMap: true)
             }
             .onAppear {
-                self.mapRegion = locationManager.region
+                updateCameraPosition()
             }
             .onReceive(locationManager.$region) { newRegion in
-                self.mapRegion = newRegion
+                position = .region(newRegion)
             }
-            
+
             Button {
                 locationManager.requestLocation()
             } label: {
@@ -59,12 +58,15 @@ struct MapView: View {
             }
         }
     }
+
+    private func updateCameraPosition() {
+        let region = locationManager.region
+        position = .region(region)
+    }
 }
 
-struct MapView_Previews: PreviewProvider {
-    static var previews: some View {
-        MapView()
-            .environmentObject(LocationManager())
-            .environmentObject(NotesStore())
-    }
+#Preview {
+    MapView()
+        .environmentObject(LocationManager())
+        .environmentObject(NotesStore())
 }

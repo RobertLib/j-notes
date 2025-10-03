@@ -10,26 +10,29 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            NotesView().tabItem {
-                Label("list", systemImage: "list.bullet")
-            }
-            
-            CalendarView().tabItem {
-                Label("calendar", systemImage: "calendar")
-            }
-            
-            MapView().tabItem {
-                Label("map", systemImage: "map")
-            }
+            NotesView()
+                .tabItem {
+                    Label("list", systemImage: "list.bullet")
+                }
+                .tag(0)
+
+            CalendarView()
+                .tabItem {
+                    Label("calendar", systemImage: "calendar")
+                }
+                .tag(1)
+
+            MapView()
+                .tabItem {
+                    Label("map", systemImage: "map")
+                }
+                .tag(2)
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-            .environmentObject(LocationManager())
-            .environmentObject(NotesStore())
-    }
+#Preview {
+    ContentView()
+        .environmentObject(LocationManager())
+        .environmentObject(NotesStore())
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AnimatedBackgroundView: View {
     @State private var animateGradient = false
-    
+
     var body: some View {
         LinearGradient(
             colors: [.accentColor, .yellow],
@@ -31,14 +31,14 @@ struct LaunchScreenView: View {
     @State private var isActive = false
     @State private var scaleEffect = 0.5
     @State private var opacity = 0.5
-    
+
     var body: some View {
         if isActive {
             ContentView()
         } else {
             ZStack {
                 AnimatedBackgroundView()
-                
+
                 Text("notes")
                     .font(.title)
                     .scaleEffect(scaleEffect)
@@ -51,8 +51,9 @@ struct LaunchScreenView: View {
                     scaleEffect = 1.4
                     opacity = 1
                 }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+
+                Task {
+                    try? await Task.sleep(for: .seconds(1.5))
                     withAnimation {
                         isActive = true
                     }
@@ -62,10 +63,8 @@ struct LaunchScreenView: View {
     }
 }
 
-struct LaunchScreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        LaunchScreenView()
-            .environmentObject(LocationManager())
-            .environmentObject(NotesStore())
-    }
+#Preview {
+    LaunchScreenView()
+        .environmentObject(LocationManager())
+        .environmentObject(NotesStore())
 }

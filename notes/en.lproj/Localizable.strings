@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   notes
 
   Created by Robert Libšanský on 08.07.2022.
-  
+
 */
 
 "calendar" = "Calendar";
@@ -18,7 +18,9 @@
 "map" = "Map";
 "new" = "New";
 "newNote" = "New note";
+"note" = "note";
 "noNotes" = "No notes";
+"noNotesForDate" = "No notes for this date";
 "notes" = "J-Notes";
 "pinned" = "Pinned";
 "reminder" = "Reminder";

@@ -1,9 +1,9 @@
-/* 
+/*
   Localizable.strings
   notes
 
   Created by Robert Libšanský on 08.07.2022.
-  
+
 */
 
 "calendar" = "Kalendář";
@@ -18,7 +18,9 @@
 "map" = "Mapa";
 "new" = "Nový";
 "newNote" = "Nová poznámka";
+"note" = "poznámka";
 "noNotes" = "Žádné poznámky";
+"noNotesForDate" = "Žádné poznámky pro tento den";
 "notes" = "J-Poznámky";
 "pinned" = "Připnutý";
 "reminder" = "Připomínka";

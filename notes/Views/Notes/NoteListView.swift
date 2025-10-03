@@ -9,31 +9,33 @@ import SwiftUI
 
 struct NoteListView: View {
     @EnvironmentObject private var notesStore: NotesStore
-    
+
     let notes: [NoteModel]
-    
+
     private func togglePinned(note: NoteModel) {
         withAnimation {
             notesStore.update(note: note, pinned: !note.pinned)
         }
     }
-    
+
     private func deleteNote(note: NoteModel) {
         withAnimation {
-            NotificationManager.instance.removeNotifications(
-                identifiers: note.notificationIdentifiers
-            )
-            
             notesStore.remove(note: note)
         }
+
+        Task {
+            await NotificationManager.instance.removeNotifications(
+                identifiers: note.notificationIdentifiers
+            )
+        }
     }
-    
+
     private func moveNote(offsets: IndexSet, offset: Int) {
         withAnimation {
             notesStore.moveNote(from: offsets, to: offset)
         }
     }
-    
+
     var body: some View {
         ForEach(notes) { note in
             NoteRowView(note: note)
@@ -43,7 +45,7 @@ struct NoteListView: View {
                     } label: {
                         let systemName =
                             "pin\(note.pinned ? ".slash" : "").fill"
-                        
+
                         Image(systemName: systemName)
                     }.tint(.accentColor)
                 }
@@ -55,15 +57,18 @@ struct NoteListView: View {
                     }.tint(.red)
                 }
         }
-        .onDelete(perform: { offsets in })
-//        .onMove(perform: moveNote)
+        .onDelete { indexSet in
+            indexSet.forEach { index in
+                let note = notes[index]
+                deleteNote(note: note)
+            }
+        }
     }
 }
 
-struct NoteListView_Previews: PreviewProvider {
-    static var previews: some View {
-        NoteListView(notes: [
-            NoteModel(title: "Title", content: "Lorem ipsum")
-        ])
-    }
+#Preview {
+    NoteListView(notes: [
+        NoteModel(title: "Title", content: "Lorem ipsum")
+    ])
+    .environmentObject(NotesStore())
 }

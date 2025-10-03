@@ -10,31 +10,33 @@ import SwiftUI
 
 let lastLocationInit = "50.0495641,14.4362814"
 
-class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
+@MainActor
+final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
     @AppStorage("lastLocation") var lastLocationStorage = lastLocationInit
-    
+
     var lastLocation: [Double] {
         let location = lastLocationStorage.split(separator: ",")
-        
+
         var out: [Double] = []
-        
+
         if
             let latitude = Double(location[0]),
             let longitude = Double(location[1])
         {
             out = [latitude, longitude]
         }
-        
+
         return out
     }
 
     @Published var region = MKCoordinateRegion()
-    
+    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+
     private let manager = CLLocationManager()
-    
+
     override init() {
         super.init()
-        
+
         _region = Published(initialValue: MKCoordinateRegion(
             center: CLLocationCoordinate2D(
                 latitude: lastLocation[0],
@@ -45,10 +47,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
                 longitudeDelta: 0.2
             )
         ))
-        
+
         manager.delegate = self
+        authorizationStatus = manager.authorizationStatus
     }
-    
+
     var isAuthorized: Bool {
         switch manager.authorizationStatus {
         case .authorizedAlways, .authorizedWhenInUse:
@@ -57,39 +60,41 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
             return false
         }
     }
-    
+
     func requestLocation() {
         manager.requestWhenInUseAuthorization()
-        
+
         if isAuthorized {
             manager.requestLocation()
         }
     }
-    
-    func locationManager(
-        _ manager: CLLocationManager,
-        didChangeAuthorization status: CLAuthorizationStatus
-    ) {
-        switch status {
-        case .authorizedAlways, .authorizedWhenInUse:
-            manager.requestLocation()
-        default:
-            break
+
+    nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        let status = manager.authorizationStatus
+        let shouldRequestLocation = status == .authorizedAlways || status == .authorizedWhenInUse
+
+        Task { @MainActor in
+            authorizationStatus = status
+            if shouldRequestLocation {
+                self.manager.requestLocation()
+            }
         }
     }
-    
-    func locationManager(
+
+    nonisolated func locationManager(
         _ manager: CLLocationManager,
         didUpdateLocations locations: [CLLocation]
     ) {
-        locations.last.map {
+        guard let location = locations.last else { return }
+
+        Task { @MainActor in
             lastLocationStorage =
-                "\($0.coordinate.latitude),\($0.coordinate.longitude)"
-            
+                "\(location.coordinate.latitude),\(location.coordinate.longitude)"
+
             region = MKCoordinateRegion(
                 center: CLLocationCoordinate2D(
-                    latitude: $0.coordinate.latitude,
-                    longitude: $0.coordinate.longitude
+                    latitude: location.coordinate.latitude,
+                    longitude: location.coordinate.longitude
                 ),
                 span: MKCoordinateSpan(
                     latitudeDelta: 0.2,
@@ -98,11 +103,27 @@ class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
             )
         }
     }
-    
-    func locationManager(
+
+    nonisolated func locationManager(
         _ manager: CLLocationManager,
         didFailWithError error: Error
     ) {
-        print(error)
+        Task { @MainActor in
+            print("❌ Location manager error: \(error.localizedDescription)")
+
+            // Handle specific error cases
+            if let clError = error as? CLError {
+                switch clError.code {
+                case .denied:
+                    print("⚠️ Location access denied by user")
+                case .locationUnknown:
+                    print("⚠️ Location temporarily unavailable")
+                case .network:
+                    print("⚠️ Network error while getting location")
+                default:
+                    break
+                }
+            }
+        }
     }
 }
