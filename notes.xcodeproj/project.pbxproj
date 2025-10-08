@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D40119592E96DD6300E50C17 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40119582E96DD6300E50C17 /* DrawingView.swift */; };
 		D4084F8928B0CBCD00B942E5 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4084F8828B0CBCD00B942E5 /* MapView.swift */; };
 		D42BAD8328754F5000F6E98F /* NotesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D42BAD8228754F5000F6E98F /* NotesStore.swift */; };
 		D45A6EAD2875CAEE002B1DB5 /* NoteFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D40119582E96DD6300E50C17 /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		D4084F8828B0CBCD00B942E5 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		D42BAD8228754F5000F6E98F /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
 		D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteFormView.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 		D4A02BAC2874AF880009830B /* Notes */ = {
 			isa = PBXGroup;
 			children = (
+				D40119582E96DD6300E50C17 /* DrawingView.swift */,
 				D4A02BAD2874AFAC0009830B /* NoteDetailView.swift */,
 				D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */,
 				D48C11082882F665004033DE /* NoteListView.swift */,
@@ -302,6 +305,7 @@
 				D4A02BAA2874ACDB0009830B /* NoteRowView.swift in Sources */,
 				D4866D0328B0EA1500A37460 /* LocationManager.swift in Sources */,
 				D4A02BA62874A7970009830B /* NoteModel.swift in Sources */,
+				D40119592E96DD6300E50C17 /* DrawingView.swift in Sources */,
 				D4A02BAE2874AFAC0009830B /* NoteDetailView.swift in Sources */,
 				D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */,
 			);
@@ -535,7 +539,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
 				PRODUCT_NAME = "J-Notes";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -567,7 +571,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
 				PRODUCT_NAME = "J-Notes";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

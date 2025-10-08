@@ -5,6 +5,7 @@
 //  Created by Robert Libšanský on 05.07.2022.
 //
 
+import PencilKit
 import SwiftUI
 
 struct NoteDetailView: View {
@@ -47,7 +48,18 @@ struct NoteDetailView: View {
                     }
                 }
 
-                Text("\(note.content)")
+                // Display content based on note type
+                if note.type == .text {
+                    Text("\(note.content)")
+                } else if note.type == .drawing, let drawingData = note.drawingData {
+                    if let drawing = try? PKDrawing(data: drawingData) {
+                        Image(uiImage: drawing.image(from: drawing.bounds, scale: 1.0))
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .background(Color.white)
+                            .cornerRadius(8)
+                    }
+                }
 
                 if fromMap {
                     if let reminder = note.reminder {

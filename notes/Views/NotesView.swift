@@ -57,8 +57,8 @@ struct NotesView: View {
                 }
             }
             .navigationTitle("notes")
-            .alert("Error", isPresented: $showErrorAlert) {
-                Button("OK") {
+            .alert("error", isPresented: $showErrorAlert) {
+                Button("ok") {
                     showErrorAlert = false
                 }
             } message: {

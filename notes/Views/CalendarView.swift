@@ -73,7 +73,16 @@ struct CalendarView: View {
                                 }
                             }
                         } header: {
-                            Text("\(notesForSelectedDate.count) \(notesForSelectedDate.count == 1 ? String(localized: "note") : String(localized: "notes"))")
+                            let count = notesForSelectedDate.count
+                            let key: String
+                            if count == 1 {
+                                key = "notesCountSingular"
+                            } else if count >= 2 && count <= 4 {
+                                key = "notesCountPaucal"
+                            } else {
+                                key = "notesCountPlural"
+                            }
+                            Text(String(format: String(localized: String.LocalizationValue(key)), count))
                         }
                     }
                 }

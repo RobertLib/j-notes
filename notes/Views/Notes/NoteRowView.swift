@@ -27,6 +27,13 @@ struct NoteRowView: View {
 
                         Spacer()
 
+                        // Drawing indicator
+                        if note.type == .drawing {
+                            Image(systemName: "pencil.tip.crop.circle")
+                                .font(.system(size: 18))
+                                .foregroundColor(.accentColor.opacity(0.75))
+                        }
+
                         if note.pinned {
                             Image(systemName: "pin.fill")
                                 .font(.system(size: 18))
@@ -38,7 +45,14 @@ struct NoteRowView: View {
                         Text(note.title).font(.title2)
                     }
 
-                    Text(note.content).lineLimit(2).truncationMode(.tail)
+                    if note.type == .text {
+                        Text(note.content).lineLimit(2).truncationMode(.tail)
+                    } else {
+                        Text("drawingNote")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                            .italic()
+                    }
 
                     if let reminder = note.reminder {
                         if reminder > Date() {

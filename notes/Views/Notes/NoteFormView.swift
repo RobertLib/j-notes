@@ -5,6 +5,7 @@
 //  Created by Robert Libšanský on 06.07.2022.
 //
 
+import PencilKit
 import SwiftUI
 
 struct NoteFormView: View {
@@ -20,6 +21,14 @@ struct NoteFormView: View {
     @State private var isColorOn: Bool
     @State private var reminder: Date
     @State private var isReminderOn: Bool
+    @State private var noteType: NoteType
+
+    // Drawing states
+    @State private var canvas = PKCanvasView()
+    @State private var isDraw = true
+    @State private var drawingColor: Color = .black
+    @State private var penType: PKInkingTool.InkType = .pen
+    @State private var penWidth: CGFloat = 3
 
     @State private var isContentErrorPresented = false
 
@@ -31,16 +40,31 @@ struct NoteFormView: View {
         _color = State(initialValue: note?.color ?? .primary)
         _isColorOn = State(initialValue: note?.color != nil)
         _reminder = State(initialValue: note?.reminder ?? Date())
+        _noteType = State(initialValue: note?.type ?? .text)
 
         _isReminderOn = State(
             initialValue: note?.reminder == nil
                 ? false
                 : note?.reminder ?? Date() > Date()
         )
+
+        // Load existing drawing if available
+        if let drawingData = note?.drawingData,
+           let drawing = try? PKDrawing(data: drawingData) {
+            let canvasView = PKCanvasView()
+            canvasView.drawing = drawing
+            _canvas = State(initialValue: canvasView)
+        }
     }
 
     private func submit() {
-        guard !content.isEmpty else {
+        // Validate content based on note type
+        if noteType == .text && content.isEmpty {
+            isContentErrorPresented = true
+            return
+        }
+
+        if noteType == .drawing && canvas.drawing.bounds.isEmpty {
             isContentErrorPresented = true
             return
         }
@@ -53,22 +77,29 @@ struct NoteFormView: View {
 
             var notificationIdentifiers: [String] = []
 
+            let notificationContent = noteType == .text ? content : String(localized: "drawingNote")
+
             if isReminderOn {
                 let notificationIdentifier =
                     await NotificationManager.instance.scheduleNotification(
                         title: title.isEmpty ? String(localized: "note") : title,
-                        subtitle: content,
+                        subtitle: notificationContent,
                         date: reminder
                     )
 
                 notificationIdentifiers.append(notificationIdentifier)
             }
 
+            // Get drawing data if it's a drawing note
+            let drawingData = noteType == .drawing ? canvas.drawing.dataRepresentation() : nil
+
             if let note = note {
                 notesStore.update(
                     note: note,
                     title: title,
                     content: content,
+                    type: noteType,
+                    drawingData: drawingData,
                     color: color,
                     isColorOn: isColorOn,
                     reminder: reminder,
@@ -82,6 +113,8 @@ struct NoteFormView: View {
                 notesStore.add(
                     title: title,
                     content: content,
+                    type: noteType,
+                    drawingData: drawingData,
                     color: color,
                     isColorOn: isColorOn,
                     reminder: reminder,
@@ -102,20 +135,39 @@ struct NoteFormView: View {
             Section {
                 TextField("title", text: $title)
 
-                ZStack(alignment: .topLeading) {
-                    if content.isEmpty {
-                        Text("content")
-                            .foregroundColor(Color(.placeholderText))
-                            .offset(y: 8)
-                    }
+                // Note type picker
+                Picker("noteType", selection: $noteType) {
+                    Text("textNote").tag(NoteType.text)
+                    Text("drawingNote").tag(NoteType.drawing)
+                }
+                .pickerStyle(.segmented)
+                .disabled(note != nil) // Don't allow changing type when editing
 
-                    TextEditor(text: $content)
-                        .frame(minHeight: 125)
-                        .offset(x: -5)
-                        .alert(
-                            "contentError",
-                            isPresented: $isContentErrorPresented
-                        ) {}
+                // Content based on type
+                if noteType == .text {
+                    ZStack(alignment: .topLeading) {
+                        if content.isEmpty {
+                            Text("content")
+                                .foregroundColor(Color(.placeholderText))
+                                .offset(y: 8)
+                        }
+
+                        TextEditor(text: $content)
+                            .frame(minHeight: 125)
+                            .offset(x: -5)
+                    }
+                } else {
+                    // Drawing canvas
+                    DrawingCanvasView(
+                        canvas: $canvas,
+                        isDraw: $isDraw,
+                        color: $drawingColor,
+                        type: $penType,
+                        penWidth: $penWidth
+                    )
+                    .frame(height: 400)
+                    .background(Color.white)
+                    .cornerRadius(8)
                 }
 
                 Toggle("color", isOn: $isColorOn.animation())
@@ -144,9 +196,18 @@ struct NoteFormView: View {
                 Button("save") {
                     submit()
                 }
-                .disabled(content.isEmpty)
+                .buttonStyle(.borderless)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .disabled(
+                    (noteType == .text && content.isEmpty) ||
+                    (noteType == .drawing && canvas.drawing.bounds.isEmpty)
+                )
             }
         }
+        .alert(
+            "contentError",
+            isPresented: $isContentErrorPresented
+        ) {}
         .onAppear() {
             locationManager.requestLocation()
         }

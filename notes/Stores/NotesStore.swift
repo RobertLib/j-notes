@@ -86,6 +86,8 @@ final class NotesStore: ObservableObject {
     func add(
         title: String,
         content: String,
+        type: NoteType? = nil,
+        drawingData: Data? = nil,
         color: Color? = nil,
         isColorOn: Bool? = nil,
         reminder: Date? = nil,
@@ -97,6 +99,8 @@ final class NotesStore: ObservableObject {
             NoteModel(
                 title: title,
                 content: content,
+                type: type ?? .text,
+                drawingData: drawingData,
                 color: isColorOn == false ? nil : color,
                 reminder: isReminderOn == false ? nil : reminder,
                 notificationIdentifiers: notificationIdentifiers?.count == 0
@@ -112,6 +116,8 @@ final class NotesStore: ObservableObject {
         note: NoteModel,
         title: String? = nil,
         content: String? = nil,
+        type: NoteType? = nil,
+        drawingData: Data? = nil,
         pinned: Bool? = nil,
         color: Color? = nil,
         isColorOn: Bool? = nil,
@@ -126,6 +132,8 @@ final class NotesStore: ObservableObject {
                 createdAt: note.createdAt,
                 title: title ?? note.title,
                 content: content ?? note.content,
+                type: type ?? note.type,
+                drawingData: drawingData ?? note.drawingData,
                 pinned: pinned ?? note.pinned,
                 color: isColorOn == false ? nil : color ?? note.color,
                 reminder:
