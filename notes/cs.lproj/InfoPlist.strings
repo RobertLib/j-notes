@@ -1,9 +1,11 @@
-/* 
+/*
   InfoPlist.strings
   notes
 
   Created by Robert Libšanský on 02.09.2022.
-  
+
 */
 
 "NSLocationWhenInUseUsageDescription" = "Pro zobrazení pozice poznámek na mapě";
+"NSCameraUsageDescription" = "Pro pořízení fotografií do kreslených poznámek";
+"NSPhotoLibraryUsageDescription" = "Pro výběr fotografií do kreslených poznámek";

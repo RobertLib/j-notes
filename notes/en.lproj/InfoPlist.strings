@@ -1,9 +1,11 @@
-/* 
+/*
   InfoPlist.strings
   notes
 
   Created by Robert Libšanský on 02.09.2022.
-  
+
 */
 
 "NSLocationWhenInUseUsageDescription" = "To display the position of the notes on the map";
+"NSCameraUsageDescription" = "To take photos for drawing notes";
+"NSPhotoLibraryUsageDescription" = "To select photos for drawing notes";

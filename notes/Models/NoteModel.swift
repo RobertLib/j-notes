@@ -8,11 +8,20 @@
 import CoreLocation
 import SwiftUI
 
+enum NoteType: String, Codable, Sendable {
+    case text
+    case drawing
+}
+
 struct NoteModel: Identifiable, Codable, Sendable {
     let id: UUID
     let createdAt: Date
     let title: String
     let content: String
+    let type: NoteType
+    let drawingData: Data?
+    let drawingCanvasSize: CGSize?
+    let backgroundImageData: Data?
     let pinned: Bool
     let color: Color?
     let reminder: Date?
@@ -24,6 +33,10 @@ struct NoteModel: Identifiable, Codable, Sendable {
         createdAt: Date? = nil,
         title: String,
         content: String,
+        type: NoteType? = nil,
+        drawingData: Data? = nil,
+        drawingCanvasSize: CGSize? = nil,
+        backgroundImageData: Data? = nil,
         pinned: Bool? = nil,
         color: Color? = nil,
         reminder: Date? = nil,
@@ -34,6 +47,10 @@ struct NoteModel: Identifiable, Codable, Sendable {
         self.createdAt = createdAt ?? .now
         self.title = title
         self.content = content
+        self.type = type ?? .text
+        self.drawingData = drawingData
+        self.drawingCanvasSize = drawingCanvasSize
+        self.backgroundImageData = backgroundImageData
         self.pinned = pinned ?? false
         self.color = color
         self.reminder = reminder

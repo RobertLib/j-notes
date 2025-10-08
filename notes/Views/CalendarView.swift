@@ -47,33 +47,59 @@ struct CalendarView: View {
                                 NavigationLink {
                                     NoteDetailView(note: note)
                                 } label: {
-                                    VStack(alignment: .leading, spacing: 5) {
-                                        HStack {
-                                            if let reminder = note.reminder {
-                                                Text(reminder.formatted(date: .omitted, time: .shortened))
-                                                    .font(.subheadline)
-                                                    .foregroundColor(.accentColor)
+                                    HStack {
+                                        Circle()
+                                            .frame(width: 16, height: 16)
+                                            .foregroundColor(note.color ?? .gray.opacity(0.4))
+
+                                        VStack(alignment: .leading, spacing: 5) {
+                                            HStack {
+                                                if let reminder = note.reminder {
+                                                    Text(reminder.formatted(date: .omitted, time: .shortened))
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.accentColor)
+                                                }
+
+                                                Spacer()
+
+                                                if note.type == .drawing {
+                                                    Image(systemName: "pencil.tip.crop.circle")
+                                                        .font(.system(size: 18))
+                                                        .foregroundColor(.accentColor.opacity(0.75))
+                                                }
                                             }
 
-                                            Spacer()
-                                        }
+                                            if !note.title.isEmpty {
+                                                Text(note.title)
+                                                    .font(.headline)
+                                            }
 
-                                        if !note.title.isEmpty {
-                                            Text(note.title)
-                                                .font(.headline)
+                                            if note.type == .text {
+                                                Text(note.content)
+                                                    .lineLimit(2)
+                                                    .truncationMode(.tail)
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.secondary)
+                                            } else {
+                                                Text("drawingNote")
+                                                    .font(.subheadline)
+                                                    .foregroundColor(.secondary)
+                                                    .italic()
+                                            }
                                         }
-
-                                        Text(note.content)
-                                            .lineLimit(2)
-                                            .truncationMode(.tail)
-                                            .font(.subheadline)
-                                            .foregroundColor(.secondary)
                                     }
                                     .padding(.vertical, 4)
                                 }
                             }
                         } header: {
-                            Text("\(notesForSelectedDate.count) \(notesForSelectedDate.count == 1 ? String(localized: "note") : String(localized: "notes"))")
+                            let count = notesForSelectedDate.count
+                            if count == 1 {
+                                Text(String(format: NSLocalizedString("notesCountSingular", comment: ""), count))
+                            } else if count >= 2 && count <= 4 {
+                                Text(String(format: NSLocalizedString("notesCountPaucal", comment: ""), count))
+                            } else {
+                                Text(String(format: NSLocalizedString("notesCountPlural", comment: ""), count))
+                            }
                         }
                     }
                 }
