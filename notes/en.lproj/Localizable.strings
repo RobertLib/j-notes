@@ -44,3 +44,20 @@
 "selectNote" = "Select Note";
 "photoLibrary" = "Photo Library";
 "camera" = "Camera";
+"sortBy" = "Sort by";
+"dateNewest" = "Date (newest)";
+"dateOldest" = "Date (oldest)";
+"titleAZ" = "Title (A-Z)";
+"titleZA" = "Title (Z-A)";
+"displayStyle" = "Display style";
+"compact" = "Compact";
+"standard" = "Standard";
+"detailed" = "Detailed";
+"deleted" = "Deleted";
+"deletedNotes" = "Deleted Notes";
+"noDeletedNotes" = "No deleted notes";
+"deletedAt" = "Deleted";
+"restore" = "Restore";
+"permanentDelete" = "Delete permanently";
+"permanentDeleteConfirm" = "Permanently delete note?";
+

@@ -141,7 +141,7 @@ struct NoteDetailView: View {
 
                 // Display content based on note type
                 if note.type == .text {
-                    Text("\(note.content)")
+                    InteractiveTextView(note: note, notesStore: notesStore)
                 } else if note.type == .drawing {
                     if let drawingData = note.drawingData,
                        let drawing = try? PKDrawing(data: drawingData) {
@@ -150,8 +150,22 @@ struct NoteDetailView: View {
 
                         // Create composite image with background + drawing
                         let compositeImage: UIImage = {
-                            UIGraphicsBeginImageContextWithOptions(canvasSize, false, 2.0)
+                            // Force light mode to render drawing with proper colors
+                            var drawingImage: UIImage?
+                            UITraitCollection(userInterfaceStyle: .light).performAsCurrent {
+                                drawingImage = drawing.image(from: drawingRect, scale: 2.0)
+                            }
+
+                            guard let drawingImage = drawingImage else {
+                                return drawing.image(from: drawingRect, scale: 2.0)
+                            }
+
+                            UIGraphicsBeginImageContextWithOptions(canvasSize, true, 2.0)
                             defer { UIGraphicsEndImageContext() }
+
+                            // Fill with white background
+                            UIColor.white.setFill()
+                            UIRectFill(CGRect(origin: .zero, size: canvasSize))
 
                             // Draw background image if available with aspect fit
                             if let backgroundImageData = note.backgroundImageData,
@@ -176,8 +190,7 @@ struct NoteDetailView: View {
                                 backgroundImage.draw(in: drawRect)
                             }
 
-                            // Draw the drawing on top
-                            let drawingImage = drawing.image(from: drawingRect, scale: 2.0)
+                            // Draw the PKDrawing image created in light mode
                             drawingImage.draw(in: drawingRect)
 
                             return UIGraphicsGetImageFromCurrentImageContext() ?? drawingImage
@@ -260,7 +273,8 @@ struct NoteDetailView: View {
                                 identifiers: note.notificationIdentifiers
                             )
 
-                            notesStore.remove(note: note)
+                            // Move to trash instead of permanent delete
+                            notesStore.moveToTrash(note: note)
 
                             dismiss()
                         }
@@ -272,6 +286,105 @@ struct NoteDetailView: View {
                 }
             }
         }
+    }
+}
+
+// Interactive text view that allows tapping checkboxes
+struct InteractiveTextView: View {
+    let note: NoteModel
+    let notesStore: NotesStore
+
+    @State private var localContent: String
+
+    init(note: NoteModel, notesStore: NotesStore) {
+        self.note = note
+        self.notesStore = notesStore
+        self._localContent = State(initialValue: note.content)
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            ForEach(Array(localContent.components(separatedBy: "\n").enumerated()), id: \.offset) { index, line in
+                if line.hasPrefix("▢ ") || line.hasPrefix("▣ ") {
+                    CheckboxLineView(
+                        line: line,
+                        onToggle: {
+                            toggleCheckboxAtLine(index)
+                        }
+                    )
+                } else {
+                    Text(line)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .onAppear {
+            // Update local content when view appears
+            localContent = note.content
+        }
+        .onChange(of: note.content) { _, newValue in
+            // Update local content when note content changes
+            localContent = newValue
+        }
+    }
+
+    private func toggleCheckboxAtLine(_ lineIndex: Int) {
+        var lines = localContent.components(separatedBy: "\n")
+        guard lineIndex < lines.count else { return }
+
+        let line = lines[lineIndex]
+        let uncheckedBox = "▢ "
+        let checkedBox = "▣ "
+
+        if line.hasPrefix(uncheckedBox) {
+            // Toggle to checked
+            lines[lineIndex] = checkedBox + String(line.dropFirst(uncheckedBox.count))
+        } else if line.hasPrefix(checkedBox) {
+            // Toggle to unchecked
+            lines[lineIndex] = uncheckedBox + String(line.dropFirst(checkedBox.count))
+        }
+
+        let newContent = lines.joined(separator: "\n")
+        localContent = newContent
+
+        // Update the note in store - create new instance with updated content
+        let updatedNote = NoteModel(
+            id: note.id,
+            createdAt: note.createdAt,
+            title: note.title,
+            content: newContent,
+            type: note.type,
+            drawingData: note.drawingData,
+            drawingCanvasSize: note.drawingCanvasSize,
+            backgroundImageData: note.backgroundImageData,
+            pinned: note.pinned,
+            color: note.color,
+            reminder: note.reminder,
+            notificationIdentifiers: note.notificationIdentifiers,
+            location: note.location
+        )
+        notesStore.update(note: updatedNote)
+    }
+}
+
+// View for a single checkbox line
+struct CheckboxLineView: View {
+    let line: String
+    let onToggle: () -> Void
+
+    var body: some View {
+        Button(action: onToggle) {
+            HStack(alignment: .top, spacing: 4) {
+                Text(String(line.prefix(1)))
+                    .font(.system(size: 20))
+                Text(String(line.dropFirst(2)))
+                    .foregroundColor(.primary)
+                Spacer()
+            }
+        }
+        .buttonStyle(.plain)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
 

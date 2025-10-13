@@ -11,6 +11,7 @@ struct NoteListView: View {
     @EnvironmentObject private var notesStore: NotesStore
 
     let notes: [NoteModel]
+    let displayStyle: NoteDisplayStyle
 
     private func togglePinned(note: NoteModel) {
         withAnimation {
@@ -20,7 +21,8 @@ struct NoteListView: View {
 
     private func deleteNote(note: NoteModel) {
         withAnimation {
-            notesStore.remove(note: note)
+            // Move to trash instead of permanent delete
+            notesStore.moveToTrash(note: note)
         }
 
         Task {
@@ -38,7 +40,7 @@ struct NoteListView: View {
 
     var body: some View {
         ForEach(notes) { note in
-            NoteRowView(note: note)
+            NoteRowView(note: note, displayStyle: displayStyle)
                 .swipeActions(edge: .leading) {
                     Button {
                         togglePinned(note: note)
@@ -67,8 +69,11 @@ struct NoteListView: View {
 }
 
 #Preview {
-    NoteListView(notes: [
-        NoteModel(title: "Title", content: "Lorem ipsum")
-    ])
+    NoteListView(
+        notes: [
+            NoteModel(title: "Title", content: "Lorem ipsum")
+        ],
+        displayStyle: .standard
+    )
     .environmentObject(NotesStore())
 }

@@ -44,3 +44,20 @@
 "selectNote" = "Vyberte poznámku";
 "photoLibrary" = "Knihovna fotek";
 "camera" = "Fotoaparát";
+"sortBy" = "Řadit podle";
+"dateNewest" = "Datum (nejnovější)";
+"dateOldest" = "Datum (nejstarší)";
+"titleAZ" = "Název (A-Z)";
+"titleZA" = "Název (Z-A)";
+"displayStyle" = "Styl zobrazení";
+"compact" = "Kompaktní";
+"standard" = "Standardní";
+"detailed" = "Podrobný";
+"deleted" = "Smazané";
+"deletedNotes" = "Smazané poznámky";
+"noDeletedNotes" = "Žádné smazané poznámky";
+"deletedAt" = "Smazáno";
+"restore" = "Obnovit";
+"permanentDelete" = "Smazat trvale";
+"permanentDeleteConfirm" = "Trvale smazat poznámku?";
+

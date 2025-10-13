@@ -21,7 +21,8 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> PKCanvasView {
         canvas.drawingPolicy = .anyInput
         canvas.tool = isDraw ? ink : eraser
-        canvas.backgroundColor = .white
+        canvas.backgroundColor = UIColor(white: 1.0, alpha: 1.0) // Force white background in both light and dark mode
+        canvas.overrideUserInterfaceStyle = .light // Force light mode for canvas
         canvas.delegate = context.coordinator
         updateBackgroundImage(canvas)
         return canvas

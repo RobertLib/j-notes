@@ -38,7 +38,11 @@ struct MapView: View {
                             ZStack {
                                 Image(systemName: "note.text")
                                     .frame(width: 40, height: 40)
-                                    .background(group.notes.first?.color ?? .gray.opacity(0.6))
+                                    .background(
+                                        group.notes.count > 1
+                                            ? Color.gray.opacity(0.6)
+                                            : (group.notes.first?.color ?? .gray.opacity(0.6))
+                                    )
                                     .background(.white)
                                     .foregroundColor(.white)
                                     .font(.system(size: 20))
@@ -108,7 +112,7 @@ struct MapView: View {
     private var groupedNotes: [NoteGroup] {
         var groups: [NoteGroup] = []
 
-        for note in notesStore.notes {
+        for note in notesStore.activeNotes {
             if let index = groups.firstIndex(where: { areCoordinatesEqual($0.coordinate, note.coordinate) }) {
                 groups[index].notes.append(note)
             } else {
@@ -126,7 +130,7 @@ struct MapView: View {
     }
 
     private func notesAt(coordinate: CLLocationCoordinate2D) -> [NoteModel] {
-        notesStore.notes.filter { areCoordinatesEqual($0.coordinate, coordinate) }
+        notesStore.activeNotes.filter { areCoordinatesEqual($0.coordinate, coordinate) }
     }
 
     private func annotationTitle(for group: NoteGroup) -> String {

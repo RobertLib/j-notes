@@ -19,7 +19,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
 
         var out: [Double] = []
 
-        if
+        if location.count >= 2,
             let latitude = Double(location[0]),
             let longitude = Double(location[1])
         {
@@ -37,10 +37,12 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
     override init() {
         super.init()
 
+        let initialLocation = lastLocation.count >= 2 ? lastLocation : [50.0495641, 14.4362814]
+
         _region = Published(initialValue: MKCoordinateRegion(
             center: CLLocationCoordinate2D(
-                latitude: lastLocation[0],
-                longitude: lastLocation[1]
+                latitude: initialLocation[0],
+                longitude: initialLocation[1]
             ),
             span: MKCoordinateSpan(
                 latitudeDelta: 0.2,

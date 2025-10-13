@@ -26,6 +26,9 @@
 		D4A02BAE2874AFAC0009830B /* NoteDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A02BAD2874AFAC0009830B /* NoteDetailView.swift */; };
 		D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AD7F0E28816A32001D5A03 /* LaunchScreenView.swift */; };
 		D4BCED792878022A00AA2B8C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4BCED7B2878022A00AA2B8C /* Localizable.strings */; };
+		D4E8C7CB2E9D9461003AF427 /* ViewEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8C7CA2E9D9461003AF427 /* ViewEnums.swift */; };
+		D4E8C7E32E9D9DD5003AF427 /* UndoableTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8C7E22E9D9DD5003AF427 /* UndoableTextEditor.swift */; };
+		D4E8C7F92E9DA970003AF427 /* DeletedNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8C7F82E9DA970003AF427 /* DeletedNotesView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +65,9 @@
 		D4AD7F0E28816A32001D5A03 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
 		D4BCED7A2878022A00AA2B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D4BCED7C2878023200AA2B8C /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D4E8C7CA2E9D9461003AF427 /* ViewEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEnums.swift; sourceTree = "<group>"; };
+		D4E8C7E22E9D9DD5003AF427 /* UndoableTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoableTextEditor.swift; sourceTree = "<group>"; };
+		D4E8C7F82E9DA970003AF427 /* DeletedNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedNotesView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -149,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				D4A02BA52874A7970009830B /* NoteModel.swift */,
+				D4E8C7CA2E9D9461003AF427 /* ViewEnums.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -169,11 +176,13 @@
 		D4A02BAC2874AF880009830B /* Notes */ = {
 			isa = PBXGroup;
 			children = (
+				D4E8C7F82E9DA970003AF427 /* DeletedNotesView.swift */,
 				D40119582E96DD6300E50C17 /* DrawingView.swift */,
 				D4A02BAD2874AFAC0009830B /* NoteDetailView.swift */,
 				D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */,
 				D48C11082882F665004033DE /* NoteListView.swift */,
 				D4A02BA92874ACDB0009830B /* NoteRowView.swift */,
+				D4E8C7E22E9D9DD5003AF427 /* UndoableTextEditor.swift */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
@@ -297,6 +306,7 @@
 				D4A02B992874A72E0009830B /* ContentView.swift in Sources */,
 				D493FC5228840E790015030F /* NotesView.swift in Sources */,
 				D48C11092882F665004033DE /* NoteListView.swift in Sources */,
+				D4E8C7F92E9DA970003AF427 /* DeletedNotesView.swift in Sources */,
 				D4084F8928B0CBCD00B942E5 /* MapView.swift in Sources */,
 				D484E021288D4C3500A9A9A8 /* NotificationManager.swift in Sources */,
 				D4A02B972874A72E0009830B /* notesApp.swift in Sources */,
@@ -306,6 +316,8 @@
 				D4866D0328B0EA1500A37460 /* LocationManager.swift in Sources */,
 				D4A02BA62874A7970009830B /* NoteModel.swift in Sources */,
 				D40119592E96DD6300E50C17 /* DrawingView.swift in Sources */,
+				D4E8C7E32E9D9DD5003AF427 /* UndoableTextEditor.swift in Sources */,
+				D4E8C7CB2E9D9461003AF427 /* ViewEnums.swift in Sources */,
 				D4A02BAE2874AFAC0009830B /* NoteDetailView.swift in Sources */,
 				D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */,
 			);
@@ -539,7 +551,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
 				PRODUCT_NAME = "J-Notes";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -571,7 +583,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
 				PRODUCT_NAME = "J-Notes";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

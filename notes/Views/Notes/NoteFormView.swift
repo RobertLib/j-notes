@@ -10,8 +10,11 @@ import SwiftUI
 
 struct NoteFormView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.undoManager) private var undoManager
     @EnvironmentObject private var locationManager: LocationManager
     @EnvironmentObject private var notesStore: NotesStore
+
+    @FocusState private var isContentFocused: Bool
 
     let note: NoteModel?
 
@@ -22,6 +25,7 @@ struct NoteFormView: View {
     @State private var reminder: Date
     @State private var isReminderOn: Bool
     @State private var noteType: NoteType
+    @State private var textViewUndoManager: UndoManager?
 
     // Drawing states
     @State private var canvas = PKCanvasView()
@@ -161,17 +165,13 @@ struct NoteFormView: View {
 
                 // Content based on type
                 if noteType == .text {
-                    ZStack(alignment: .topLeading) {
-                        if content.isEmpty {
-                            Text("content")
-                                .foregroundColor(Color(.placeholderText))
-                                .offset(y: 8)
-                        }
-
-                        TextEditor(text: $content)
-                            .frame(minHeight: 125)
-                            .offset(x: -5)
-                    }
+                    UndoableTextEditor(
+                        text: $content,
+                        placeholder: String(localized: "content"),
+                        undoManager: $textViewUndoManager
+                    )
+                    .frame(minHeight: 125)
+                    .focused($isContentFocused)
                 } else {
                     // Drawing canvas
                     DrawingCanvasView(

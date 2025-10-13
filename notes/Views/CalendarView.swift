@@ -13,7 +13,7 @@ struct CalendarView: View {
 
     private var notesForSelectedDate: [NoteModel] {
         let calendar = Calendar.current
-        return notesStore.notes.filter { note in
+        return notesStore.activeNotes.filter { note in
             guard let reminder = note.reminder else { return false }
             return calendar.isDate(reminder, inSameDayAs: selectedDate)
         }.sorted { $0.reminder ?? Date() < $1.reminder ?? Date() }

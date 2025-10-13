@@ -12,13 +12,27 @@ struct NotesView: View {
 
     @State private var searchText = ""
     @State private var showErrorAlert = false
+    @State private var sortOption: NoteSortOption = .dateNewest
+    @State private var displayStyle: NoteDisplayStyle = .standard
 
     var searchedNotes: [NoteModel] {
-        notesStore.notes.filter({ note in
+        // Filter only active (non-deleted) notes
+        let filtered = notesStore.activeNotes.filter({ note in
             searchText.isEmpty ||
             note.title.lowercased().contains(searchText.lowercased()) ||
             note.content.lowercased().contains(searchText.lowercased())
-        }).sorted { $0.createdAt > $1.createdAt }
+        })
+
+        switch sortOption {
+        case .dateNewest:
+            return filtered.sorted { $0.createdAt > $1.createdAt }
+        case .dateOldest:
+            return filtered.sorted { $0.createdAt < $1.createdAt }
+        case .titleAZ:
+            return filtered.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
+        case .titleZA:
+            return filtered.sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedDescending }
+        }
     }
 
     var pinnedNotes: [NoteModel] {
@@ -33,19 +47,32 @@ struct NotesView: View {
         })
     }
 
+    private func sortIcon(for option: NoteSortOption) -> String {
+        switch option {
+        case .dateNewest:
+            return "calendar.badge.clock"
+        case .dateOldest:
+            return "calendar"
+        case .titleAZ:
+            return "textformat.abc"
+        case .titleZA:
+            return "textformat.abc"
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
                 List {
                     if !pinnedNotes.isEmpty {
                         Section("pinned") {
-                            NoteListView(notes: pinnedNotes)
+                            NoteListView(notes: pinnedNotes, displayStyle: displayStyle)
                         }
                     }
 
                     if !unpinnedNotes.isEmpty {
                         Section {
-                            NoteListView(notes: unpinnedNotes)
+                            NoteListView(notes: unpinnedNotes, displayStyle: displayStyle)
                         }
                     }
                 }
@@ -74,6 +101,41 @@ struct NotesView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     EditButton()
+                }
+
+                if !notesStore.deletedNotes.isEmpty {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        NavigationLink {
+                            DeletedNotesView()
+                        } label: {
+                            Text("deleted")
+                        }
+                    }
+                }
+
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Section {
+                            Picker("sortBy", selection: $sortOption) {
+                                ForEach(NoteSortOption.allCases) { option in
+                                    Label(option.localizedName, systemImage: sortIcon(for: option))
+                                        .tag(option)
+                                }
+                            }
+                        }
+
+                        Section {
+                            Picker("displayStyle", selection: $displayStyle) {
+                                ForEach(NoteDisplayStyle.allCases) { style in
+                                    Label(style.localizedName, systemImage: style.icon)
+                                        .tag(style)
+                                }
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                            .font(.system(size: 18))
+                    }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {

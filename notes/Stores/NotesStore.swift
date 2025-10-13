@@ -149,12 +149,71 @@ final class NotesStore: ObservableObject {
                 notificationIdentifiers: notificationIdentifiers?.count == 0
                     ? nil
                     : notificationIdentifiers,
-                location: location ?? note.location
+                location: location ?? note.location,
+                isDeleted: note.isDeleted,
+                deletedAt: note.deletedAt
             )
             scheduleSave()
         }
     }
 
+    // Simplified update that accepts full note
+    func update(note: NoteModel) {
+        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+            notes[index] = note
+            scheduleSave()
+        }
+    }
+
+    // Soft delete - move to trash
+    func moveToTrash(note: NoteModel) {
+        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+            notes[index] = NoteModel(
+                id: note.id,
+                createdAt: note.createdAt,
+                title: note.title,
+                content: note.content,
+                type: note.type,
+                drawingData: note.drawingData,
+                drawingCanvasSize: note.drawingCanvasSize,
+                backgroundImageData: note.backgroundImageData,
+                pinned: note.pinned,
+                color: note.color,
+                reminder: note.reminder,
+                notificationIdentifiers: note.notificationIdentifiers,
+                location: note.location,
+                isDeleted: true,
+                deletedAt: Date()
+            )
+            scheduleSave()
+        }
+    }
+
+    // Restore from trash
+    func restoreFromTrash(note: NoteModel) {
+        if let index = notes.firstIndex(where: { $0.id == note.id }) {
+            notes[index] = NoteModel(
+                id: note.id,
+                createdAt: note.createdAt,
+                title: note.title,
+                content: note.content,
+                type: note.type,
+                drawingData: note.drawingData,
+                drawingCanvasSize: note.drawingCanvasSize,
+                backgroundImageData: note.backgroundImageData,
+                pinned: note.pinned,
+                color: note.color,
+                reminder: note.reminder,
+                notificationIdentifiers: note.notificationIdentifiers,
+                location: note.location,
+                isDeleted: false,
+                deletedAt: nil
+            )
+            scheduleSave()
+        }
+    }
+
+    // Permanently delete
     func remove(note: NoteModel) {
         if let index = notes.firstIndex(where: { $0.id == note.id }) {
             notes.remove(at: index)
@@ -170,5 +229,14 @@ final class NotesStore: ObservableObject {
     func moveNote(from offsets: IndexSet, to offset: Int) {
         notes.move(fromOffsets: offsets, toOffset: offset)
         scheduleSave()
+    }
+
+    // Computed properties for filtered notes
+    var activeNotes: [NoteModel] {
+        notes.filter { !$0.isDeleted }
+    }
+
+    var deletedNotes: [NoteModel] {
+        notes.filter { $0.isDeleted }.sorted { ($0.deletedAt ?? .distantPast) > ($1.deletedAt ?? .distantPast) }
     }
 }
