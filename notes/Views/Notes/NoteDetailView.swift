@@ -262,28 +262,28 @@ struct NoteDetailView: View {
                     Image(systemName: "trash")
                         .foregroundStyle(.red)
                 }
-                .confirmationDialog(
-                    "deleteNoteConfirm",
-                    isPresented: $isDeleteNoteConfirmPresented,
-                    titleVisibility: .visible
-                ) {
-                    Button("delete", role: .destructive) {
-                        Task {
-                            await NotificationManager.instance.removeNotifications(
-                                identifiers: note.notificationIdentifiers
-                            )
+            }
+        }
+        .confirmationDialog(
+            "deleteNoteConfirm",
+            isPresented: $isDeleteNoteConfirmPresented,
+            titleVisibility: .visible
+        ) {
+            Button("delete", role: .destructive) {
+                Task {
+                    await NotificationManager.instance.removeNotifications(
+                        identifiers: note.notificationIdentifiers
+                    )
 
-                            // Move to trash instead of permanent delete
-                            notesStore.moveToTrash(note: note)
+                    // Move to trash instead of permanent delete
+                    notesStore.moveToTrash(note: note)
 
-                            dismiss()
-                        }
-                    }
-
-                    Button("cancel", role: .cancel) {
-                        isDeleteNoteConfirmPresented = false
-                    }
+                    dismiss()
                 }
+            }
+
+            Button("cancel", role: .cancel) {
+                isDeleteNoteConfirmPresented = false
             }
         }
     }

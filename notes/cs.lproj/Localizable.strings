@@ -60,4 +60,8 @@
 "restore" = "Obnovit";
 "permanentDelete" = "Smazat trvale";
 "permanentDeleteConfirm" = "Trvale smazat poznámku?";
-
+"exportNotes" = "Zálohovat poznámky";
+"importNotes" = "Obnovit ze zálohy";
+"mergeNotes" = "Sloučit";
+"replaceNotes" = "Nahradit vše";
+"importOptionsMessage" = "Sloučit přidá nové poznámky k existujícím. Nahradit smaže všechny poznámky a nahradí je importovanými.";

@@ -60,4 +60,8 @@
 "restore" = "Restore";
 "permanentDelete" = "Delete permanently";
 "permanentDeleteConfirm" = "Permanently delete note?";
-
+"exportNotes" = "Backup Notes";
+"importNotes" = "Restore from Backup";
+"mergeNotes" = "Merge";
+"replaceNotes" = "Replace All";
+"importOptionsMessage" = "Merge will add new notes to existing ones. Replace will delete all notes and replace them with imported ones.";

@@ -23,35 +23,70 @@ final class NotesStore: ObservableObject {
     }()
 
     private func load() {
-        // Migration: Check UserDefaults first for backward compatibility
-        if let data = UserDefaults.standard.data(forKey: "notes"),
-           let decoded = try? JSONDecoder().decode([NoteModel].self, from: data) {
-            notes = decoded
-            // Migrate to file storage
-            Task {
-                await save()
-            }
-            UserDefaults.standard.removeObject(forKey: "notes")
-            print("✅ Migrated notes from UserDefaults to file storage")
-            return
-        }
+        var fileLoadError: Error? = nil
 
-        // Load from file
+        // Try to load from file first (current storage)
         do {
             let data = try Data(contentsOf: Self.notesFileURL)
             let decoded = try JSONDecoder().decode([NoteModel].self, from: data)
             notes = decoded
             print("✅ Loaded \(notes.count) notes from file storage")
+
+            // Clean up old UserDefaults if they exist (migration already completed)
+            if UserDefaults.standard.data(forKey: "notes") != nil {
+                UserDefaults.standard.removeObject(forKey: "notes")
+                print("🧹 Cleaned up old UserDefaults data")
+            }
+            return
         } catch CocoaError.fileReadNoSuchFile {
-            // First launch - no notes file exists yet
-            print("ℹ️ No notes file found - starting fresh")
+            // File doesn't exist - check for migration from UserDefaults
+            print("ℹ️ No notes file found - checking for UserDefaults migration")
         } catch {
-            print("❌ Failed to load notes: \(error.localizedDescription)")
-            saveError = "Failed to load notes"
+            // File exists but is corrupted - save error and try UserDefaults fallback
+            print("⚠️ File corrupted, trying UserDefaults fallback: \(error.localizedDescription)")
+            fileLoadError = error
+        }
+
+        // Migration: Load from UserDefaults if file doesn't exist OR is corrupted
+        if let data = UserDefaults.standard.data(forKey: "notes"),
+           let decoded = try? JSONDecoder().decode([NoteModel].self, from: data) {
+            notes = decoded
+
+            if fileLoadError != nil {
+                print("✅ Recovered \(notes.count) notes from UserDefaults backup after file corruption")
+            } else {
+                print("⚠️ Found \(notes.count) notes in UserDefaults, migrating to file storage...")
+            }
+
+            // Perform SYNCHRONOUS migration/recovery to file
+            do {
+                let encoder = JSONEncoder()
+                encoder.outputFormatting = .prettyPrinted
+                let encoded = try encoder.encode(notes)
+                try encoded.write(to: Self.notesFileURL, options: [.atomic, .completeFileProtection])
+
+                // Only remove from UserDefaults AFTER confirmed successful save
+                UserDefaults.standard.removeObject(forKey: "notes")
+                print("✅ Successfully saved \(notes.count) notes to file storage")
+                saveError = nil
+            } catch {
+                print("❌ Failed to save to file: \(error.localizedDescription)")
+                print("⚠️ Notes remain in UserDefaults as backup")
+                saveError = "Failed to save notes"
+            }
+            return
+        }
+
+        // No data anywhere - either first launch or both sources failed
+        if fileLoadError != nil {
+            print("❌ Both file and UserDefaults failed - data may be lost")
+            saveError = "Failed to load notes: \(fileLoadError!.localizedDescription)"
+        } else {
+            print("ℹ️ Starting fresh - no existing notes found")
         }
     }
 
-    private func save() async {
+    private func save() async -> Bool {
         do {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
@@ -59,9 +94,11 @@ final class NotesStore: ObservableObject {
             try encoded.write(to: Self.notesFileURL, options: [.atomic, .completeFileProtection])
             saveError = nil
             print("✅ Successfully saved \(notes.count) notes")
+            return true
         } catch {
             print("❌ Failed to save notes: \(error.localizedDescription)")
             saveError = String(localized: "Failed to save notes: \(error.localizedDescription)")
+            return false
         }
     }
 
@@ -75,12 +112,16 @@ final class NotesStore: ObservableObject {
             try? await Task.sleep(for: .milliseconds(100))
 
             guard !Task.isCancelled else { return }
-            await save()
+            _ = await save()
         }
     }
 
     init() {
         load()
+    }
+
+    func setError(_ message: String) {
+        saveError = message
     }
 
     func add(
@@ -229,6 +270,54 @@ final class NotesStore: ObservableObject {
     func moveNote(from offsets: IndexSet, to offset: Int) {
         notes.move(fromOffsets: offsets, toOffset: offset)
         scheduleSave()
+    }
+
+    // Export notes to JSON data
+    func exportNotes() -> Data? {
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            encoder.dateEncodingStrategy = .iso8601
+            let data = try encoder.encode(notes)
+            print("✅ Exported \(notes.count) notes")
+            return data
+        } catch {
+            print("❌ Failed to export notes: \(error.localizedDescription)")
+            saveError = "Failed to export notes: \(error.localizedDescription)"
+            return nil
+        }
+    }
+
+    // Import notes from JSON data
+    func importNotes(from data: Data, replaceExisting: Bool = false) -> Bool {
+        do {
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let importedNotes = try decoder.decode([NoteModel].self, from: data)
+
+            if replaceExisting {
+                // Replace all existing notes
+                notes = importedNotes
+                print("✅ Replaced all notes with \(importedNotes.count) imported notes")
+            } else {
+                // Merge - add only notes with IDs that don't exist
+                var addedCount = 0
+                for importedNote in importedNotes {
+                    if !notes.contains(where: { $0.id == importedNote.id }) {
+                        notes.append(importedNote)
+                        addedCount += 1
+                    }
+                }
+                print("✅ Imported \(addedCount) new notes (skipped \(importedNotes.count - addedCount) duplicates)")
+            }
+
+            scheduleSave()
+            return true
+        } catch {
+            print("❌ Failed to import notes: \(error.localizedDescription)")
+            saveError = "Failed to import notes: \(error.localizedDescription)"
+            return false
+        }
     }
 
     // Computed properties for filtered notes
