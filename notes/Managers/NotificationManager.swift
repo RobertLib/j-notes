@@ -9,7 +9,7 @@ import SwiftUI
 import UserNotifications
 
 @MainActor
-final class NotificationManager: ObservableObject {
+final class NotificationManager {
     static let instance = NotificationManager()
 
     private init() {}

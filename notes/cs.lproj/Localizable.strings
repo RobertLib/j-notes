@@ -65,3 +65,13 @@
 "mergeNotes" = "Sloučit";
 "replaceNotes" = "Nahradit vše";
 "importOptionsMessage" = "Sloučit přidá nové poznámky k existujícím. Nahradit smaže všechny poznámky a nahradí je importovanými.";
+"savedLocation" = "Uložená poloha";
+"tags" = "Štítky";
+"addTag" = "Přidat štítek";
+"allTags" = "Vše";
+"protected" = "Chráněno biometrikou";
+"lockedNote" = "Tato poznámka je chráněna";
+"authenticate" = "Odemknout";
+"authenticateReason" = "Pro otevření poznámky";
+"widgetDescription" = "Přehled vašich posledních poznámek";
+"noteNotFound" = "Poznámka nenalezena";

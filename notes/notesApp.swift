@@ -88,14 +88,14 @@ extension Date {
 
 @main
 struct notesApp: App {
-    @StateObject var locationManager = LocationManager()
-    @StateObject var notesStore = NotesStore()
+    @State private var locationManager = LocationManager()
+    @State private var notesStore = NotesStore.shared
 
     var body: some Scene {
         WindowGroup {
             LaunchScreenView()
-                .environmentObject(locationManager)
-                .environmentObject(notesStore)
+                .environment(locationManager)
+                .environment(notesStore)
                 .task {
                     // Reset badge when app opens
                     await NotificationManager.instance.resetBadgeCount()

@@ -9,7 +9,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct NotesView: View {
-    @EnvironmentObject private var notesStore: NotesStore
+    @Environment(NotesStore.self) private var notesStore
 
     @State private var searchText = ""
     @State private var showErrorAlert = false
@@ -19,13 +19,15 @@ struct NotesView: View {
     @State private var showImportSheet = false
     @State private var showImportOptions = false
     @State private var importData: Data?
+    @State private var selectedTag: String?
 
     var searchedNotes: [NoteModel] {
-        // Filter only active (non-deleted) notes
         let filtered = notesStore.activeNotes.filter({ note in
-            searchText.isEmpty ||
-            note.title.lowercased().contains(searchText.lowercased()) ||
-            note.content.lowercased().contains(searchText.lowercased())
+            let matchesSearch = searchText.isEmpty ||
+                note.title.lowercased().contains(searchText.lowercased()) ||
+                note.content.lowercased().contains(searchText.lowercased())
+            let matchesTag = selectedTag.map { note.tags.contains($0) } ?? true
+            return matchesSearch && matchesTag
         })
 
         switch sortOption {
@@ -41,15 +43,11 @@ struct NotesView: View {
     }
 
     var pinnedNotes: [NoteModel] {
-        searchedNotes.filter({
-            $0.pinned == true
-        })
+        searchedNotes.filter({ $0.pinned == true })
     }
 
     var unpinnedNotes: [NoteModel] {
-        searchedNotes.filter({
-            $0.pinned == false
-        })
+        searchedNotes.filter({ $0.pinned == false })
     }
 
     private func sortIcon(for option: NoteSortOption) -> String {
@@ -69,6 +67,37 @@ struct NotesView: View {
         NavigationStack {
             ZStack {
                 List {
+                    if !notesStore.allTags.isEmpty {
+                        Section {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    TagFilterChip(
+                                        label: String(localized: "allTags"),
+                                        isSelected: selectedTag == nil
+                                    ) {
+                                        withAnimation { selectedTag = nil }
+                                    }
+                                    ForEach(notesStore.allTags, id: \.self) { tag in
+                                        TagFilterChip(
+                                            label: tag,
+                                            isSelected: selectedTag == tag
+                                        ) {
+                                            withAnimation {
+                                                selectedTag = selectedTag == tag ? nil : tag
+                                            }
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 6)
+                            }
+                            .listRowBackground(Color.clear)
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                        }
+                        .listSectionSpacing(8)
+                    }
+
                     if !pinnedNotes.isEmpty {
                         Section("pinned") {
                             NoteListView(notes: pinnedNotes, displayStyle: displayStyle)
@@ -85,7 +114,7 @@ struct NotesView: View {
                 if searchedNotes.isEmpty {
                     Text("noNotes")
                         .font(.system(size: 25))
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("notes")
@@ -104,12 +133,12 @@ struct NotesView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                 }
 
                 if !notesStore.deletedNotes.isEmpty {
-                    ToolbarItem(placement: .navigationBarLeading) {
+                    ToolbarItem(placement: .topBarLeading) {
                         NavigationLink {
                             DeletedNotesView()
                         } label: {
@@ -118,7 +147,7 @@ struct NotesView: View {
                     }
                 }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Section {
                             Picker("sortBy", selection: $sortOption) {
@@ -157,7 +186,7 @@ struct NotesView: View {
                     }
                 }
 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
                         NoteFormView().navigationTitle("newNote")
                     } label: {
@@ -189,7 +218,6 @@ struct NotesView: View {
                 case .success(let urls):
                     guard let url = urls.first else { return }
 
-                    // Request access to security-scoped resource
                     guard url.startAccessingSecurityScopedResource() else {
                         print("❌ Failed to access security-scoped resource")
                         notesStore.setError("Failed to access file")
@@ -235,6 +263,25 @@ struct NotesView: View {
     }
 }
 
+struct TagFilterChip: View {
+    let label: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .font(.subheadline)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(isSelected ? Color.accentColor : Color.secondary.opacity(0.15))
+                .foregroundStyle(isSelected ? Color.white : Color.primary)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
 // Document for file export
 struct NotesDocument: FileDocument {
     static var readableContentTypes: [UTType] { [.json] }
@@ -259,5 +306,5 @@ struct NotesDocument: FileDocument {
 
 #Preview {
     NotesView()
-        .environmentObject(NotesStore())
+        .environment(NotesStore())
 }

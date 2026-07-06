@@ -30,7 +30,7 @@ struct NoteRowView: View {
         HStack {
             Circle()
                 .frame(width: 12, height: 12)
-                .foregroundColor(note.color ?? .gray.opacity(0.4))
+                .foregroundStyle(note.color ?? .gray.opacity(0.4))
 
             VStack(alignment: .leading, spacing: 2) {
                 HStack {
@@ -42,10 +42,10 @@ struct NoteRowView: View {
                     } else if note.type == .drawing {
                         Text(LocalizedStringKey("drawingNote"))
                             .font(.body)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .lineLimit(1)
                     } else {
-                        Text(note.content)
+                        Text(note.isProtected ? "•••••••" : note.content)
                             .font(.body)
                             .lineLimit(1)
                     }
@@ -55,19 +55,25 @@ struct NoteRowView: View {
                     if note.type == .drawing {
                         Image(systemName: "pencil.tip.crop.circle")
                             .font(.system(size: 14))
-                            .foregroundColor(.accentColor.opacity(0.75))
+                            .foregroundStyle(Color.accentColor.opacity(0.75))
                     }
 
                     if note.pinned {
                         Image(systemName: "pin.fill")
                             .font(.system(size: 14))
-                            .foregroundColor(.accentColor.opacity(0.75))
+                            .foregroundStyle(Color.accentColor.opacity(0.75))
+                    }
+
+                    if note.isProtected {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.secondary)
                     }
                 }
 
                 Text(note.createdAt.timeAgoDisplay())
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(.vertical, 4)
@@ -77,13 +83,13 @@ struct NoteRowView: View {
         HStack {
             Circle()
                 .frame(width: 16, height: 16)
-                .foregroundColor(note.color ?? .gray.opacity(0.4))
+                .foregroundStyle(note.color ?? .gray.opacity(0.4))
 
             VStack(alignment: .leading, spacing: 5) {
                 HStack {
                     Text(note.createdAt.timeAgoDisplay())
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
 
                     Spacer()
 
@@ -91,13 +97,19 @@ struct NoteRowView: View {
                     if note.type == .drawing {
                         Image(systemName: "pencil.tip.crop.circle")
                             .font(.system(size: 18))
-                            .foregroundColor(.accentColor.opacity(0.75))
+                            .foregroundStyle(Color.accentColor.opacity(0.75))
                     }
 
                     if note.pinned {
                         Image(systemName: "pin.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(.accentColor.opacity(0.75))
+                            .foregroundStyle(Color.accentColor.opacity(0.75))
+                    }
+
+                    if note.isProtected {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 18))
+                            .foregroundStyle(.secondary)
                     }
                 }
 
@@ -106,11 +118,11 @@ struct NoteRowView: View {
                 }
 
                 if note.type == .text {
-                    Text(note.content).lineLimit(2).truncationMode(.tail)
+                    Text(note.isProtected ? "•••••••••••" : note.content).lineLimit(2).truncationMode(.tail)
                 } else {
                     Text("drawingNote")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .italic()
                 }
 
@@ -118,14 +130,30 @@ struct NoteRowView: View {
                     if reminder > Date() {
                         HStack {
                             Image(systemName: "bell")
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
 
                             Text(reminder.formatted())
                         }
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .padding(.top, 3)
                     }
+                }
+
+                if !note.tags.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 4) {
+                            ForEach(note.tags, id: \.self) { tag in
+                                Text(tag)
+                                    .font(.caption2)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .clipShape(Capsule())
+                            }
+                        }
+                    }
+                    .padding(.top, 2)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -136,18 +164,18 @@ struct NoteRowView: View {
         HStack(alignment: .top) {
             Circle()
                 .frame(width: 20, height: 20)
-                .foregroundColor(note.color ?? .gray.opacity(0.4))
+                .foregroundStyle(note.color ?? .gray.opacity(0.4))
 
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text(note.createdAt.timeAgoDisplay())
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
 
                         Text(note.createdAt, style: .date)
                             .font(.caption2)
-                            .foregroundColor(.secondary.opacity(0.8))
+                            .foregroundStyle(.secondary.opacity(0.8))
                     }
 
                     Spacer()
@@ -156,13 +184,19 @@ struct NoteRowView: View {
                         if note.type == .drawing {
                             Image(systemName: "pencil.tip.crop.circle")
                                 .font(.system(size: 20))
-                                .foregroundColor(.accentColor.opacity(0.75))
+                                .foregroundStyle(Color.accentColor.opacity(0.75))
                         }
 
                         if note.pinned {
                             Image(systemName: "pin.fill")
                                 .font(.system(size: 20))
-                                .foregroundColor(.accentColor.opacity(0.75))
+                                .foregroundStyle(Color.accentColor.opacity(0.75))
+                        }
+
+                        if note.isProtected {
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 20))
+                                .foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -174,14 +208,14 @@ struct NoteRowView: View {
                 }
 
                 if note.type == .text {
-                    Text(note.content)
+                    Text(note.isProtected ? "•••••••••••" : note.content)
                         .lineLimit(3)
                         .truncationMode(.tail)
                         .font(.body)
                 } else {
                     Text("drawingNote")
                         .font(.body)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .italic()
                 }
 
@@ -189,12 +223,12 @@ struct NoteRowView: View {
                     if reminder > Date() {
                         HStack {
                             Image(systemName: "bell.fill")
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
 
                             VStack(alignment: .leading, spacing: 2) {
                                 Text("reminder")
                                     .font(.caption)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
 
                                 Text(reminder.formatted())
                                     .font(.subheadline)
@@ -207,11 +241,27 @@ struct NoteRowView: View {
                 if note.location != nil {
                     HStack {
                         Image(systemName: "location.fill")
-                            .foregroundColor(.accentColor)
+                            .foregroundStyle(Color.accentColor)
 
-                        Text("Uložená poloha")
+                        Text("savedLocation")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.top, 2)
+                }
+
+                if !note.tags.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 4) {
+                            ForEach(note.tags, id: \.self) { tag in
+                                Text(tag)
+                                    .font(.caption2)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(Color.accentColor.opacity(0.1))
+                                    .clipShape(Capsule())
+                            }
+                        }
                     }
                     .padding(.top, 2)
                 }
@@ -228,7 +278,8 @@ struct NoteRowView: View {
             title: "Title",
             content: "Lorem ipsum",
             pinned: true,
-            reminder: Date()
+            reminder: Date(),
+            tags: ["práce", "osobní"]
         ),
         displayStyle: .standard
     )

@@ -9,8 +9,8 @@ import MapKit
 import SwiftUI
 
 struct MapView: View {
-    @EnvironmentObject private var locationManager: LocationManager
-    @EnvironmentObject private var notesStore: NotesStore
+    @Environment(LocationManager.self) private var locationManager
+    @Environment(NotesStore.self) private var notesStore
 
     @State private var sheetType: SheetType? = nil
     @State private var position: MapCameraPosition = .automatic
@@ -44,14 +44,14 @@ struct MapView: View {
                                             : (group.notes.first?.color ?? .gray.opacity(0.6))
                                     )
                                     .background(.white)
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                                     .font(.system(size: 20))
                                     .clipShape(Circle())
 
                                 if group.notes.count > 1 {
                                     Text("\(group.notes.count)")
                                         .font(.system(size: 12, weight: .bold))
-                                        .foregroundColor(.white)
+                                        .foregroundStyle(.white)
                                         .frame(width: 20, height: 20)
                                         .background(Color.red)
                                         .clipShape(Circle())
@@ -71,35 +71,36 @@ struct MapView: View {
                         NoteDetailView(note: note, fromMap: true)
                     }
                 case .notesList(let notes):
-                    NotesListSheet(
-                        notes: notes,
-                        onSelect: { note in
-                            sheetType = nil
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                sheetType = .singleNote(note)
-                            }
-                        }
-                    )
-                    .presentationDetents([.medium, .large])
+                    NotesListSheet(notes: notes)
+                        .presentationDetents([.medium, .large])
                 }
             }
             .onAppear {
                 updateCameraPosition()
             }
-            .onReceive(locationManager.$region) { newRegion in
+            .onChange(of: locationManager.region) { _, newRegion in
                 position = .region(newRegion)
             }
 
-            Button {
-                locationManager.requestLocation()
-            } label: {
-                Image(systemName: "location")
-                    .frame(width: 50, height: 50)
-                    .background(.background)
-                    .font(.system(size: 20))
-                    .clipShape(Circle())
-                    .padding()
-            }
+            locationButton
+                .padding()
+        }
+    }
+
+    @ViewBuilder
+    private var locationButton: some View {
+        let button = Button {
+            locationManager.requestLocation()
+        } label: {
+            Image(systemName: "location")
+                .font(.system(size: 20))
+                .frame(width: 50, height: 50)
+        }
+
+        if #available(iOS 26.0, *) {
+            button.glassEffect(.regular.interactive())
+        } else {
+            button.background(.regularMaterial, in: Circle())
         }
     }
 
@@ -112,7 +113,7 @@ struct MapView: View {
     private var groupedNotes: [NoteGroup] {
         var groups: [NoteGroup] = []
 
-        for note in notesStore.activeNotes {
+        for note in notesStore.activeNotes where note.location != nil {
             if let index = groups.firstIndex(where: { areCoordinatesEqual($0.coordinate, note.coordinate) }) {
                 groups[index].notes.append(note)
             } else {
@@ -159,8 +160,8 @@ struct NoteGroup: Identifiable {
 
 // Sheet for selecting a note from multiple notes at the same location
 struct NotesListSheet: View {
+    @Environment(\.dismiss) private var dismiss
     let notes: [NoteModel]
-    let onSelect: (NoteModel) -> Void
 
     var sortedNotes: [NoteModel] {
         notes.sorted { $0.createdAt > $1.createdAt }
@@ -175,7 +176,7 @@ struct NotesListSheet: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 if !pinnedNotes.isEmpty {
                     Section("pinned") {
@@ -195,49 +196,57 @@ struct NotesListSheet: View {
             }
             .navigationTitle(LocalizedStringKey("selectNote"))
             .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { dismiss() } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
         }
     }
 
     @ViewBuilder
     private func noteRow(note: NoteModel) -> some View {
-        Button {
-            onSelect(note)
+        NavigationLink {
+            NoteDetailView(note: note, fromMap: true)
         } label: {
             HStack {
                 Circle()
                     .frame(width: 16, height: 16)
-                    .foregroundColor(note.color ?? .gray.opacity(0.4))
+                    .foregroundStyle(note.color ?? .gray.opacity(0.4))
 
                 VStack(alignment: .leading, spacing: 5) {
                     HStack {
                         Text(note.createdAt.timeAgoDisplay())
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
 
                         Spacer()
 
                         if note.type == .drawing {
                             Image(systemName: "pencil.tip.crop.circle")
                                 .font(.system(size: 18))
-                                .foregroundColor(.accentColor.opacity(0.75))
+                                .foregroundStyle(Color.accentColor.opacity(0.75))
                         }
                     }
 
                     if !note.title.isEmpty {
                         Text(note.title)
                             .font(.title2)
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                     }
 
                     if note.type == .text {
-                        Text(note.content)
-                            .foregroundColor(.primary)
+                        Text(note.isProtected ? "•••••••••••" : note.content)
+                            .foregroundStyle(.primary)
                             .lineLimit(2)
                             .truncationMode(.tail)
                     } else {
                         Text("drawingNote")
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .italic()
                     }
 
@@ -245,12 +254,12 @@ struct NotesListSheet: View {
                         if reminder > Date() {
                             HStack {
                                 Image(systemName: "bell")
-                                    .foregroundColor(.accentColor)
+                                    .foregroundStyle(Color.accentColor)
 
                                 Text(reminder.formatted())
                             }
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .padding(.top, 3)
                         }
                     }
@@ -263,6 +272,6 @@ struct NotesListSheet: View {
 
 #Preview {
     MapView()
-        .environmentObject(LocationManager())
-        .environmentObject(NotesStore())
+        .environment(LocationManager())
+        .environment(NotesStore())
 }

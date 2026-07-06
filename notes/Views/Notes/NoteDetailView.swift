@@ -5,6 +5,7 @@
 //  Created by Robert Libšanský on 05.07.2022.
 //
 
+import LocalAuthentication
 import PencilKit
 import SwiftUI
 
@@ -26,10 +27,10 @@ struct ZoomableDrawingView: View {
                 .scaleEffect(scale)
                 .offset(offset)
                 .gesture(
-                    MagnificationGesture()
+                    MagnifyGesture()
                         .onChanged { value in
-                            let delta = value / lastScale
-                            lastScale = value
+                            let delta = value.magnification / lastScale
+                            lastScale = value.magnification
                             scale = min(max(scale * delta, 1), 5)
                         }
                         .onEnded { _ in
@@ -74,34 +75,81 @@ struct ZoomableDrawingView: View {
 
 struct NoteDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var notesStore: NotesStore
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(NotesStore.self) private var notesStore
 
     let noteId: UUID
     let fromMap: Bool
 
-    init(note: NoteModel) {
-        self.noteId = note.id
-        self.fromMap = false
-    }
+    @State private var isAuthenticated: Bool
+    @State private var isDeleteNoteConfirmPresented = false
+    @State private var authError: String?
 
-    init(note: NoteModel, fromMap: Bool) {
+    init(note: NoteModel, fromMap: Bool = false) {
         self.noteId = note.id
         self.fromMap = fromMap
+        _isAuthenticated = State(initialValue: !note.isProtected)
     }
-
-    @State private var isDeleteNoteConfirmPresented = false
 
     private var currentNote: NoteModel? {
         notesStore.notes.first { $0.id == noteId }
     }
 
+    private func authenticate() {
+        authError = nil
+        let context = LAContext()
+        var error: NSError?
+        let policy: LAPolicy = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
+            ? .deviceOwnerAuthenticationWithBiometrics
+            : .deviceOwnerAuthentication
+        context.evaluatePolicy(policy, localizedReason: String(localized: "authenticateReason")) { success, authErr in
+            Task { @MainActor in
+                if success {
+                    isAuthenticated = true
+                    authError = nil
+                } else if let laError = authErr as? LAError,
+                          laError.code != .userCancel,
+                          laError.code != .appCancel,
+                          laError.code != .systemCancel {
+                    authError = laError.localizedDescription
+                }
+            }
+        }
+    }
+
     var body: some View {
         Group {
             if let note = currentNote {
-                noteDetailContent(note: note)
+                if note.isProtected && !isAuthenticated {
+                    LockedNoteView(onUnlock: authenticate, authError: authError)
+                        .navigationTitle(note.title.isEmpty ? String(localized: "note") : note.title)
+                        .navigationBarTitleDisplayMode(fromMap ? .inline : .automatic)
+                        .toolbar {
+                            if fromMap {
+                                ToolbarItem(placement: .topBarLeading) {
+                                    Button { dismiss() } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                } else {
+                    noteDetailContent(note: note)
+                }
             } else {
-                Text("Note not found")
-                    .foregroundColor(.secondary)
+                Text("noteNotFound")
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background, currentNote?.isProtected == true {
+                isAuthenticated = false
+            }
+        }
+        .onChange(of: currentNote?.isProtected) { _, isNowProtected in
+            if isNowProtected == true {
+                isAuthenticated = false
             }
         }
     }
@@ -114,7 +162,7 @@ struct NoteDetailView: View {
                     if fromMap {
                         Text(note.createdAt.timeAgoDisplay())
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .padding(.top, 25)
 
                         if !note.title.isEmpty {
@@ -127,12 +175,12 @@ struct NoteDetailView: View {
                                 if reminder > Date() {
                                     HStack {
                                         Image(systemName: "bell")
-                                            .foregroundColor(.accentColor)
+                                            .foregroundStyle(Color.accentColor)
 
                                         Text(reminder.formatted())
                                     }
                                     .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                                     .padding(.top, 3)
                                 }
                             }
@@ -208,12 +256,12 @@ struct NoteDetailView: View {
                         if reminder > Date() {
                             HStack {
                                 Image(systemName: "bell")
-                                    .foregroundColor(.accentColor)
+                                    .foregroundStyle(Color.accentColor)
 
                                 Text(reminder.formatted())
                             }
                             .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .padding(.top, 3)
                         }
                     }
@@ -228,7 +276,7 @@ struct NoteDetailView: View {
         .navigationBarTitleDisplayMode(fromMap ? .inline : .automatic)
         .toolbar {
             if fromMap {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .topBarLeading) {
                     Button {
                         dismiss()
                     } label: {
@@ -238,7 +286,7 @@ struct NoteDetailView: View {
                 }
             }
 
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 let shareContent = note.title.isEmpty ? note.content : "\(note.title): \(note.content)"
                 ShareLink(item: shareContent, subject: Text(note.title)) {
                     Image(systemName: "square.and.arrow.up")
@@ -246,7 +294,7 @@ struct NoteDetailView: View {
                 }
             }
 
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink {
                     NoteFormView(note: note).navigationTitle("editNote")
                 } label: {
@@ -255,7 +303,7 @@ struct NoteDetailView: View {
                 }
             }
 
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .topBarTrailing) {
                 Button(role: .destructive) {
                     isDeleteNoteConfirmPresented = true
                 } label: {
@@ -286,6 +334,52 @@ struct NoteDetailView: View {
                 isDeleteNoteConfirmPresented = false
             }
         }
+    }
+}
+
+struct LockedNoteView: View {
+    let onUnlock: () -> Void
+    let authError: String?
+
+    private static let biometryIcon: String = {
+        let context = LAContext()
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            return "lock.open"
+        }
+        return context.biometryType == .faceID ? "faceid" : "touchid"
+    }()
+
+    var body: some View {
+        VStack(spacing: 24) {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 56))
+                .foregroundStyle(.secondary)
+
+            Text("lockedNote")
+                .font(.headline)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+
+            Button(action: onUnlock) {
+                Label("authenticate", systemImage: Self.biometryIcon)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 12)
+                    .background(Color.accentColor.opacity(0.12))
+                    .foregroundStyle(Color.accentColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+
+            if let error = authError {
+                Text(error)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
     }
 }
 
@@ -362,7 +456,9 @@ struct InteractiveTextView: View {
             color: note.color,
             reminder: note.reminder,
             notificationIdentifiers: note.notificationIdentifiers,
-            location: note.location
+            location: note.location,
+            tags: note.tags,
+            isProtected: note.isProtected
         )
         notesStore.update(note: updatedNote)
     }
@@ -379,7 +475,7 @@ struct CheckboxLineView: View {
                 Text(String(line.prefix(1)))
                     .font(.system(size: 20))
                 Text(String(line.dropFirst(2)))
-                    .foregroundColor(.primary)
+                    .foregroundStyle(.primary)
                 Spacer()
             }
         }
@@ -393,5 +489,5 @@ struct CheckboxLineView: View {
         NoteDetailView(
             note: NoteModel(title: "Title", content: "Lorem ipsum")
         )
-    }.environmentObject(NotesStore())
+    }.environment(NotesStore())
 }

@@ -9,3 +9,4 @@
 "NSLocationWhenInUseUsageDescription" = "Pro zobrazení pozice poznámek na mapě";
 "NSCameraUsageDescription" = "Pro pořízení fotografií do kreslených poznámek";
 "NSPhotoLibraryUsageDescription" = "Pro výběr fotografií do kreslených poznámek";
+"NSFaceIDUsageDescription" = "J-Notes používá Face ID k ochraně vašich soukromých poznámek";

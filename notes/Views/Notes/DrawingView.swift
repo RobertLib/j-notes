@@ -6,6 +6,7 @@
 //
 
 import PencilKit
+import PhotosUI
 import SwiftUI
 
 struct DrawingCanvasRepresentable: UIViewRepresentable {
@@ -65,6 +66,7 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
         Coordinator(onDrawingChanged: onDrawingChanged)
     }
 
+    @MainActor
     class Coordinator: NSObject, PKCanvasViewDelegate {
         var onDrawingChanged: (() -> Void)?
 
@@ -91,6 +93,7 @@ struct DrawingCanvasView: View {
     @State private var showClearConfirmation = false
     @State private var showPhotoLibrary = false
     @State private var showCamera = false
+    @State private var selectedPhotoItem: PhotosPickerItem?
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -161,7 +164,7 @@ struct DrawingCanvasView: View {
                         } label: {
                             Image(systemName: type == .pen ? "pencil.tip" : type == .marker ? "highlighter" : "pencil")
                                 .font(.title3)
-                                .foregroundColor(.accentColor)
+                                .foregroundStyle(Color.accentColor)
                                 .frame(width: 40, height: 40)
                         }
                     } else {
@@ -171,7 +174,7 @@ struct DrawingCanvasView: View {
                         }) {
                             Image(systemName: type == .pen ? "pencil.tip" : type == .marker ? "highlighter" : "pencil")
                                 .font(.title3)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .frame(width: 40, height: 40)
                                 .contentShape(Rectangle())
                         }
@@ -190,10 +193,10 @@ struct DrawingCanvasView: View {
                         VStack(spacing: 2) {
                             Image(systemName: "lineweight")
                                 .font(.caption)
-                                .foregroundColor(showPenSettings ? .accentColor : .primary)
+                                .foregroundStyle(showPenSettings ? Color.accentColor : Color.primary)
                             Text("\(Int(penWidth))")
                                 .font(.caption2)
-                                .foregroundColor(showPenSettings ? .accentColor : .primary)
+                                .foregroundStyle(showPenSettings ? Color.accentColor : Color.primary)
                         }
                         .frame(width: 40, height: 40)
                         .contentShape(Rectangle())
@@ -221,7 +224,7 @@ struct DrawingCanvasView: View {
                     }) {
                         Image(systemName: "eraser.fill")
                             .font(.title3)
-                            .foregroundColor(isDraw ? .secondary : .red)
+                            .foregroundStyle(isDraw ? Color.secondary : Color.red)
                             .frame(width: 40, height: 40)
                             .contentShape(Rectangle())
                     }
@@ -235,7 +238,7 @@ struct DrawingCanvasView: View {
                     }) {
                         Image(systemName: "trash")
                             .font(.title3)
-                            .foregroundColor(.red)
+                            .foregroundStyle(.red)
                             .frame(width: 40, height: 40)
                             .contentShape(Rectangle())
                     }
@@ -259,13 +262,13 @@ struct DrawingCanvasView: View {
                     HStack(spacing: 8) {
                         Text("thickness")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
 
                         Slider(value: $penWidth, in: 1...20, step: 1)
 
                         Text("\(Int(penWidth)) \(String(localized: "pt"))")
                             .font(.caption)
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                             .frame(width: 40)
                     }
                     .padding(.horizontal, 12)
@@ -273,28 +276,56 @@ struct DrawingCanvasView: View {
                 }
             }
             .padding(.vertical, 8)
-            .background(Color(.systemGray6).opacity(0.95))
-            .shadow(color: .black.opacity(0.1), radius: 3, y: 2)
+            .modifier(GlassBackground(cornerRadius: 12))
+            .padding(6)
         }
-        .sheet(isPresented: $showPhotoLibrary) {
-            ImagePicker(image: $backgroundImage, sourceType: .photoLibrary)
+        .photosPicker(
+            isPresented: $showPhotoLibrary,
+            selection: $selectedPhotoItem,
+            matching: .images
+        )
+        .onChange(of: selectedPhotoItem) { _, newItem in
+            guard let newItem else { return }
+
+            Task {
+                if let data = try? await newItem.loadTransferable(type: Data.self),
+                   let image = UIImage(data: data) {
+                    backgroundImage = image
+                }
+                selectedPhotoItem = nil
+            }
         }
         .fullScreenCover(isPresented: $showCamera) {
-            ImagePicker(image: $backgroundImage, sourceType: .camera)
+            CameraPicker(image: $backgroundImage)
                 .ignoresSafeArea()
         }
     }
 }
 
-// Image Picker for selecting photos
-struct ImagePicker: UIViewControllerRepresentable {
+// Applies Liquid Glass on iOS 26+, falls back to a material background on older systems
+struct GlassBackground: ViewModifier {
+    var cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.glassEffect(.regular, in: .rect(cornerRadius: cornerRadius))
+        } else {
+            content.background(
+                .regularMaterial,
+                in: RoundedRectangle(cornerRadius: cornerRadius)
+            )
+        }
+    }
+}
+
+// Camera capture picker (photo library uses PhotosPicker)
+struct CameraPicker: UIViewControllerRepresentable {
     @Binding var image: UIImage?
     @Environment(\.dismiss) private var dismiss
-    var sourceType: UIImagePickerController.SourceType
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
-        picker.sourceType = sourceType
+        picker.sourceType = .camera
         picker.delegate = context.coordinator
         return picker
     }
@@ -305,10 +336,11 @@ struct ImagePicker: UIViewControllerRepresentable {
         Coordinator(self)
     }
 
+    @MainActor
     class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-        let parent: ImagePicker
+        let parent: CameraPicker
 
-        init(_ parent: ImagePicker) {
+        init(_ parent: CameraPicker) {
             self.parent = parent
         }
 

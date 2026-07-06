@@ -19,37 +19,9 @@ struct UndoableTextEditor: UIViewRepresentable {
         textView.backgroundColor = .clear
         textView.textContainerInset = UIEdgeInsets(top: 8, left: 0, bottom: 8, right: 0)
 
-        // Create toolbar with formatting buttons
+        // Create toolbar with checklist and undo/redo buttons
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
-
-        let boldButton = UIBarButtonItem(
-            image: UIImage(systemName: "bold"),
-            style: .plain,
-            target: context.coordinator,
-            action: #selector(Coordinator.toggleBold)
-        )
-
-        let italicButton = UIBarButtonItem(
-            image: UIImage(systemName: "italic"),
-            style: .plain,
-            target: context.coordinator,
-            action: #selector(Coordinator.toggleItalic)
-        )
-
-        let underlineButton = UIBarButtonItem(
-            image: UIImage(systemName: "underline"),
-            style: .plain,
-            target: context.coordinator,
-            action: #selector(Coordinator.toggleUnderline)
-        )
-
-        let strikethroughButton = UIBarButtonItem(
-            image: UIImage(systemName: "strikethrough"),
-            style: .plain,
-            target: context.coordinator,
-            action: #selector(Coordinator.toggleStrikethrough)
-        )
 
         let checkboxButton = UIBarButtonItem(
             image: UIImage(systemName: "checklist"),
@@ -74,7 +46,7 @@ struct UndoableTextEditor: UIViewRepresentable {
 
         let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 
-        toolbar.items = [boldButton, italicButton, underlineButton, strikethroughButton, checkboxButton, flexSpace, undoButton, redoButton]
+        toolbar.items = [checkboxButton, flexSpace, undoButton, redoButton]
         textView.inputAccessoryView = toolbar
 
         context.coordinator.textView = textView
@@ -115,6 +87,7 @@ struct UndoableTextEditor: UIViewRepresentable {
         Coordinator(self)
     }
 
+    @MainActor
     class Coordinator: NSObject, UITextViewDelegate, UIGestureRecognizerDelegate {
         var parent: UndoableTextEditor
         weak var textView: UITextView?
@@ -172,132 +145,6 @@ struct UndoableTextEditor: UIViewRepresentable {
         @objc func redoTapped() {
             textView?.undoManager?.redo()
             updateButtonStates()
-        }
-
-        @objc func toggleBold() {
-            guard let textView = textView else { return }
-
-            let selectedRange = textView.selectedRange
-            guard selectedRange.length > 0 else { return }
-
-            let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)
-            let existingAttributes = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)
-
-            if let existingFont = existingAttributes[.font] as? UIFont {
-                let isBold = existingFont.fontDescriptor.symbolicTraits.contains(.traitBold)
-                let newFont: UIFont
-
-                if isBold {
-                    // Remove bold
-                    if let descriptor = existingFont.fontDescriptor.withSymbolicTraits(existingFont.fontDescriptor.symbolicTraits.subtracting(.traitBold)) {
-                        newFont = UIFont(descriptor: descriptor, size: existingFont.pointSize)
-                    } else {
-                        newFont = existingFont
-                    }
-                } else {
-                    // Add bold
-                    if let descriptor = existingFont.fontDescriptor.withSymbolicTraits([existingFont.fontDescriptor.symbolicTraits, .traitBold]) {
-                        newFont = UIFont(descriptor: descriptor, size: existingFont.pointSize)
-                    } else {
-                        newFont = existingFont
-                    }
-                }
-
-                attributedText.addAttribute(.font, value: newFont, range: selectedRange)
-            } else {
-                // No existing font, add bold system font
-                let boldFont = UIFont.boldSystemFont(ofSize: UIFont.systemFontSize)
-                attributedText.addAttribute(.font, value: boldFont, range: selectedRange)
-            }
-
-            textView.attributedText = attributedText
-            textView.selectedRange = selectedRange
-            parent.text = textView.text
-        }
-
-        @objc func toggleItalic() {
-            guard let textView = textView else { return }
-
-            let selectedRange = textView.selectedRange
-            guard selectedRange.length > 0 else { return }
-
-            let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)
-            let existingAttributes = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)
-
-            if let existingFont = existingAttributes[.font] as? UIFont {
-                let isItalic = existingFont.fontDescriptor.symbolicTraits.contains(.traitItalic)
-                let newFont: UIFont
-
-                if isItalic {
-                    // Remove italic
-                    if let descriptor = existingFont.fontDescriptor.withSymbolicTraits(existingFont.fontDescriptor.symbolicTraits.subtracting(.traitItalic)) {
-                        newFont = UIFont(descriptor: descriptor, size: existingFont.pointSize)
-                    } else {
-                        newFont = existingFont
-                    }
-                } else {
-                    // Add italic
-                    if let descriptor = existingFont.fontDescriptor.withSymbolicTraits([existingFont.fontDescriptor.symbolicTraits, .traitItalic]) {
-                        newFont = UIFont(descriptor: descriptor, size: existingFont.pointSize)
-                    } else {
-                        newFont = existingFont
-                    }
-                }
-
-                attributedText.addAttribute(.font, value: newFont, range: selectedRange)
-            } else {
-                // No existing font, add italic system font
-                let italicFont = UIFont.italicSystemFont(ofSize: UIFont.systemFontSize)
-                attributedText.addAttribute(.font, value: italicFont, range: selectedRange)
-            }
-
-            textView.attributedText = attributedText
-            textView.selectedRange = selectedRange
-            parent.text = textView.text
-        }
-
-        @objc func toggleUnderline() {
-            guard let textView = textView else { return }
-
-            let selectedRange = textView.selectedRange
-            guard selectedRange.length > 0 else { return }
-
-            let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)
-            let existingAttributes = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)
-
-            if existingAttributes[.underlineStyle] != nil {
-                // Remove underline
-                attributedText.removeAttribute(.underlineStyle, range: selectedRange)
-            } else {
-                // Add underline
-                attributedText.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: selectedRange)
-            }
-
-            textView.attributedText = attributedText
-            textView.selectedRange = selectedRange
-            parent.text = textView.text
-        }
-
-        @objc func toggleStrikethrough() {
-            guard let textView = textView else { return }
-
-            let selectedRange = textView.selectedRange
-            guard selectedRange.length > 0 else { return }
-
-            let attributedText = NSMutableAttributedString(attributedString: textView.attributedText)
-            let existingAttributes = attributedText.attributes(at: selectedRange.location, effectiveRange: nil)
-
-            if existingAttributes[.strikethroughStyle] != nil {
-                // Remove strikethrough
-                attributedText.removeAttribute(.strikethroughStyle, range: selectedRange)
-            } else {
-                // Add strikethrough
-                attributedText.addAttribute(.strikethroughStyle, value: NSUnderlineStyle.single.rawValue, range: selectedRange)
-            }
-
-            textView.attributedText = attributedText
-            textView.selectedRange = selectedRange
-            parent.text = textView.text
         }
 
         @objc func toggleCheckbox() {

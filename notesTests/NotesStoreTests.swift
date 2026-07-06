@@ -14,8 +14,17 @@ final class NotesStoreTests: XCTestCase {
 
     var store: NotesStore!
 
-    override func setUpWithError() throws {
-        store = NotesStore()
+    override func setUp() async throws {
+        try await super.setUp()
+        let tempURL = FileManager.default.temporaryDirectory
+            .appendingPathComponent("test-notes-\(UUID().uuidString).json")
+        store = NotesStore(fileURL: tempURL)
+    }
+
+    override func tearDown() async throws {
+        try? FileManager.default.removeItem(at: store.fileURL)
+        store = nil
+        try await super.tearDown()
     }
 
     func testAddNote() {

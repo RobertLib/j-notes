@@ -65,3 +65,13 @@
 "mergeNotes" = "Merge";
 "replaceNotes" = "Replace All";
 "importOptionsMessage" = "Merge will add new notes to existing ones. Replace will delete all notes and replace them with imported ones.";
+"savedLocation" = "Saved location";
+"tags" = "Tags";
+"addTag" = "Add tag";
+"allTags" = "All";
+"protected" = "Protected by biometrics";
+"lockedNote" = "This note is protected";
+"authenticate" = "Unlock";
+"authenticateReason" = "To open this note";
+"widgetDescription" = "See your recent notes at a glance";
+"noteNotFound" = "Note not found";

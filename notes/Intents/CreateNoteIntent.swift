@@ -8,10 +8,9 @@
 import AppIntents
 import SwiftUI
 
-@available(iOS 16.0, *)
 struct CreateNoteIntent: AppIntent {
-    static var title: LocalizedStringResource = "Create Note"
-    static var description = IntentDescription("Create a new note with title and content")
+    static let title: LocalizedStringResource = "Create Note"
+    static let description = IntentDescription("Create a new note with title and content")
 
     @Parameter(title: "Title")
     var title: String?
@@ -25,17 +24,17 @@ struct CreateNoteIntent: AppIntent {
 
     @MainActor
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        // Use shared NotesStore instance to ensure notes are saved to the same storage
-        // Create a temporary instance and wait for save to complete
-        let notesStore = NotesStore()
+        // Use the shared NotesStore so the running app and the intent
+        // operate on the same in-memory data and storage file
+        let notesStore = NotesStore.shared
 
         notesStore.add(
             title: title ?? "",
             content: content
         )
 
-        // Give the store time to save asynchronously
-        try? await Task.sleep(for: .milliseconds(200))
+        // Persist immediately - the intent may be terminated right after perform() returns
+        await notesStore.saveNow()
 
         let dialog: IntentDialog
         if let noteTitle = title, !noteTitle.isEmpty {
@@ -48,7 +47,6 @@ struct CreateNoteIntent: AppIntent {
     }
 }
 
-@available(iOS 16.0, *)
 struct NotesShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(

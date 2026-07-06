@@ -65,6 +65,6 @@ struct LaunchScreenView: View {
 
 #Preview {
     LaunchScreenView()
-        .environmentObject(LocationManager())
-        .environmentObject(NotesStore())
+        .environment(LocationManager())
+        .environment(NotesStore())
 }

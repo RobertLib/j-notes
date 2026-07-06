@@ -10,9 +10,24 @@ import SwiftUI
 
 let lastLocationInit = "50.0495641,14.4362814"
 
+// Equatable conformance so views can observe region changes via .onChange
+extension MKCoordinateRegion: @retroactive Equatable {
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        lhs.center.latitude == rhs.center.latitude &&
+        lhs.center.longitude == rhs.center.longitude &&
+        lhs.span.latitudeDelta == rhs.span.latitudeDelta &&
+        lhs.span.longitudeDelta == rhs.span.longitudeDelta
+    }
+}
+
 @MainActor
-final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObject {
-    @AppStorage("lastLocation") var lastLocationStorage = lastLocationInit
+@Observable
+final class LocationManager: NSObject, CLLocationManagerDelegate {
+    @ObservationIgnored
+    var lastLocationStorage: String {
+        get { UserDefaults.standard.string(forKey: "lastLocation") ?? lastLocationInit }
+        set { UserDefaults.standard.set(newValue, forKey: "lastLocation") }
+    }
 
     var lastLocation: [Double] {
         let location = lastLocationStorage.split(separator: ",")
@@ -29,9 +44,10 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
         return out
     }
 
-    @Published var region = MKCoordinateRegion()
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    var region = MKCoordinateRegion()
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined
 
+    @ObservationIgnored
     private let manager = CLLocationManager()
 
     override init() {
@@ -39,7 +55,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
 
         let initialLocation = lastLocation.count >= 2 ? lastLocation : [50.0495641, 14.4362814]
 
-        _region = Published(initialValue: MKCoordinateRegion(
+        region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(
                 latitude: initialLocation[0],
                 longitude: initialLocation[1]
@@ -48,7 +64,7 @@ final class LocationManager: NSObject, CLLocationManagerDelegate, ObservableObje
                 latitudeDelta: 0.2,
                 longitudeDelta: 0.2
             )
-        ))
+        )
 
         manager.delegate = self
         authorizationStatus = manager.authorizationStatus

@@ -10,29 +10,23 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         TabView {
-            NotesView()
-                .tabItem {
-                    Label("list", systemImage: "list.bullet")
-                }
-                .tag(0)
+            Tab("list", systemImage: "list.bullet") {
+                NotesView()
+            }
 
-            CalendarView()
-                .tabItem {
-                    Label("calendar", systemImage: "calendar")
-                }
-                .tag(1)
+            Tab("calendar", systemImage: "calendar") {
+                CalendarView()
+            }
 
-            MapView()
-                .tabItem {
-                    Label("map", systemImage: "map")
-                }
-                .tag(2)
+            Tab("map", systemImage: "map") {
+                MapView()
+            }
         }
     }
 }
 
 #Preview {
     ContentView()
-        .environmentObject(LocationManager())
-        .environmentObject(NotesStore())
+        .environment(LocationManager())
+        .environment(NotesStore())
 }

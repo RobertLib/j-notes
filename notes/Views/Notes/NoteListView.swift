@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct NoteListView: View {
-    @EnvironmentObject private var notesStore: NotesStore
+    @Environment(NotesStore.self) private var notesStore
 
     let notes: [NoteModel]
     let displayStyle: NoteDisplayStyle
@@ -75,5 +75,5 @@ struct NoteListView: View {
         ],
         displayStyle: .standard
     )
-    .environmentObject(NotesStore())
+    .environment(NotesStore())
 }

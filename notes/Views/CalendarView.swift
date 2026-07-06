@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarView: View {
-    @EnvironmentObject private var notesStore: NotesStore
+    @Environment(NotesStore.self) private var notesStore
     @State private var selectedDate = Date()
 
     private var notesForSelectedDate: [NoteModel] {
@@ -37,7 +37,7 @@ struct CalendarView: View {
                         Spacer()
                         Text("noNotesForDate")
                             .font(.system(size: 20))
-                            .foregroundColor(.secondary)
+                            .foregroundStyle(.secondary)
                         Spacer()
                     }
                 } else {
@@ -50,14 +50,14 @@ struct CalendarView: View {
                                     HStack {
                                         Circle()
                                             .frame(width: 16, height: 16)
-                                            .foregroundColor(note.color ?? .gray.opacity(0.4))
+                                            .foregroundStyle(note.color ?? .gray.opacity(0.4))
 
                                         VStack(alignment: .leading, spacing: 5) {
                                             HStack {
                                                 if let reminder = note.reminder {
                                                     Text(reminder.formatted(date: .omitted, time: .shortened))
                                                         .font(.subheadline)
-                                                        .foregroundColor(.accentColor)
+                                                        .foregroundStyle(Color.accentColor)
                                                 }
 
                                                 Spacer()
@@ -65,7 +65,7 @@ struct CalendarView: View {
                                                 if note.type == .drawing {
                                                     Image(systemName: "pencil.tip.crop.circle")
                                                         .font(.system(size: 18))
-                                                        .foregroundColor(.accentColor.opacity(0.75))
+                                                        .foregroundStyle(Color.accentColor.opacity(0.75))
                                                 }
                                             }
 
@@ -75,15 +75,15 @@ struct CalendarView: View {
                                             }
 
                                             if note.type == .text {
-                                                Text(note.content)
+                                                Text(note.isProtected ? "•••••••••••" : note.content)
                                                     .lineLimit(2)
                                                     .truncationMode(.tail)
                                                     .font(.subheadline)
-                                                    .foregroundColor(.secondary)
+                                                    .foregroundStyle(.secondary)
                                             } else {
                                                 Text("drawingNote")
                                                     .font(.subheadline)
-                                                    .foregroundColor(.secondary)
+                                                    .foregroundStyle(.secondary)
                                                     .italic()
                                             }
                                         }
@@ -111,5 +111,5 @@ struct CalendarView: View {
 
 #Preview {
     CalendarView()
-        .environmentObject(NotesStore())
+        .environment(NotesStore())
 }

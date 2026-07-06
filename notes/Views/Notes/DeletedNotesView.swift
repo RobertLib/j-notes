@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DeletedNotesView: View {
-    @EnvironmentObject private var notesStore: NotesStore
+    @Environment(NotesStore.self) private var notesStore
     @State private var isDeleteNoteConfirmPresented = false
     @State private var noteToDelete: NoteModel?
 
@@ -17,7 +17,7 @@ struct DeletedNotesView: View {
             if notesStore.deletedNotes.isEmpty {
                 Text("noDeletedNotes")
                     .font(.system(size: 20))
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .listRowBackground(Color.clear)
             } else {
@@ -29,21 +29,21 @@ struct DeletedNotesView: View {
                         }
 
                         if note.type == .text {
-                            Text(note.content.prefix(100))
+                            Text(note.isProtected ? "•••••••••••" : String(note.content.prefix(100)))
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .lineLimit(2)
                         } else {
                             Text("drawingNote")
                                 .font(.subheadline)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                                 .italic()
                         }
 
                         if let deletedAt = note.deletedAt {
-                            Text("deletedAt") + Text(": \(deletedAt.formatted(date: .abbreviated, time: .shortened))")
+                            (Text("deletedAt") + Text(": \(deletedAt.formatted(date: .abbreviated, time: .shortened))"))
                                 .font(.caption)
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         }
                     }
                     .swipeActions(edge: .leading) {
@@ -100,5 +100,5 @@ struct DeletedNotesView: View {
     NavigationStack {
         DeletedNotesView()
     }
-    .environmentObject(NotesStore())
+    .environment(NotesStore())
 }

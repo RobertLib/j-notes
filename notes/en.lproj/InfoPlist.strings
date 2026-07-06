@@ -9,3 +9,4 @@
 "NSLocationWhenInUseUsageDescription" = "To display the position of the notes on the map";
 "NSCameraUsageDescription" = "To take photos for drawing notes";
 "NSPhotoLibraryUsageDescription" = "To select photos for drawing notes";
+"NSFaceIDUsageDescription" = "J-Notes uses Face ID to protect your private notes";

@@ -29,6 +29,8 @@ struct NoteModel: Identifiable, Sendable {
     let location: [Double]?
     let isDeleted: Bool
     let deletedAt: Date?
+    let tags: [String]
+    let isProtected: Bool
 
     init(
         id: UUID? = nil,
@@ -45,7 +47,9 @@ struct NoteModel: Identifiable, Sendable {
         notificationIdentifiers: [String]? = nil,
         location: [Double]? = nil,
         isDeleted: Bool? = nil,
-        deletedAt: Date? = nil
+        deletedAt: Date? = nil,
+        tags: [String]? = nil,
+        isProtected: Bool? = nil
     ) {
         self.id = id ?? UUID()
         self.createdAt = createdAt ?? .now
@@ -62,6 +66,8 @@ struct NoteModel: Identifiable, Sendable {
         self.location = location
         self.isDeleted = isDeleted ?? false
         self.deletedAt = deletedAt
+        self.tags = tags ?? []
+        self.isProtected = isProtected ?? false
     }
 
     var coordinate: CLLocationCoordinate2D {
@@ -81,7 +87,7 @@ extension NoteModel: Codable {
         case id, createdAt, title, content, type
         case drawingData, drawingCanvasSize, backgroundImageData
         case pinned, color, reminder, notificationIdentifiers, location
-        case isDeleted, deletedAt
+        case isDeleted, deletedAt, tags, isProtected
     }
 
     init(from decoder: Decoder) throws {
@@ -104,6 +110,8 @@ extension NoteModel: Codable {
         // New properties with default values for backward compatibility
         isDeleted = try container.decodeIfPresent(Bool.self, forKey: .isDeleted) ?? false
         deletedAt = try container.decodeIfPresent(Date.self, forKey: .deletedAt)
+        tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
+        isProtected = try container.decodeIfPresent(Bool.self, forKey: .isProtected) ?? false
     }
 
     func encode(to encoder: Encoder) throws {
@@ -124,5 +132,7 @@ extension NoteModel: Codable {
         try container.encodeIfPresent(location, forKey: .location)
         try container.encode(isDeleted, forKey: .isDeleted)
         try container.encodeIfPresent(deletedAt, forKey: .deletedAt)
+        try container.encode(tags, forKey: .tags)
+        try container.encode(isProtected, forKey: .isProtected)
     }
 }

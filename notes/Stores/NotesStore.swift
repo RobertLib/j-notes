@@ -6,15 +6,26 @@
 //
 
 import SwiftUI
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 @MainActor
-final class NotesStore: ObservableObject {
-    @Published private(set) var notes: [NoteModel] = []
-    @Published private(set) var saveError: String?
+@Observable
+final class NotesStore {
+    /// Shared instance used by the app and App Intents so they operate on the same data
+    static let shared = NotesStore()
 
+    private(set) var notes: [NoteModel] = []
+    private(set) var saveError: String?
+
+    @ObservationIgnored
     private var saveTask: Task<Void, Never>?
 
-    private static let notesFileURL: URL = {
+    // Exposed for test teardown; production code always uses the default.
+    let fileURL: URL
+
+    private static let defaultFileURL: URL = {
         let documentsDirectory = FileManager.default.urls(
             for: .documentDirectory,
             in: .userDomainMask
@@ -27,7 +38,7 @@ final class NotesStore: ObservableObject {
 
         // Try to load from file first (current storage)
         do {
-            let data = try Data(contentsOf: Self.notesFileURL)
+            let data = try Data(contentsOf: fileURL)
             let decoded = try JSONDecoder().decode([NoteModel].self, from: data)
             notes = decoded
             print("✅ Loaded \(notes.count) notes from file storage")
@@ -63,7 +74,7 @@ final class NotesStore: ObservableObject {
                 let encoder = JSONEncoder()
                 encoder.outputFormatting = .prettyPrinted
                 let encoded = try encoder.encode(notes)
-                try encoded.write(to: Self.notesFileURL, options: [.atomic, .completeFileProtection])
+                try encoded.write(to: fileURL, options: [.atomic, .completeFileProtection])
 
                 // Only remove from UserDefaults AFTER confirmed successful save
                 UserDefaults.standard.removeObject(forKey: "notes")
@@ -91,15 +102,30 @@ final class NotesStore: ObservableObject {
             let encoder = JSONEncoder()
             encoder.outputFormatting = .prettyPrinted
             let encoded = try encoder.encode(notes)
-            try encoded.write(to: Self.notesFileURL, options: [.atomic, .completeFileProtection])
+            try encoded.write(to: fileURL, options: [.atomic, .completeFileProtection])
             saveError = nil
             print("✅ Successfully saved \(notes.count) notes")
+            syncWidgetData()
             return true
         } catch {
             print("❌ Failed to save notes: \(error.localizedDescription)")
             saveError = String(localized: "Failed to save notes: \(error.localizedDescription)")
             return false
         }
+    }
+
+    private func syncWidgetData() {
+        guard let defaults = UserDefaults(suiteName: AppGroup.identifier) else { return }
+        let entries = activeNotes
+            .sorted { $0.createdAt > $1.createdAt }
+            .prefix(20)
+            .map { WidgetNoteEntry(from: $0) }
+        if let data = try? JSONEncoder().encode(Array(entries)) {
+            defaults.set(data, forKey: AppGroup.widgetDataKey)
+        }
+        #if canImport(WidgetKit)
+        WidgetCenter.shared.reloadAllTimelines()
+        #endif
     }
 
     private func scheduleSave() {
@@ -116,8 +142,17 @@ final class NotesStore: ObservableObject {
         }
     }
 
-    init() {
+    init(fileURL: URL? = nil) {
+        self.fileURL = fileURL ?? Self.defaultFileURL
         load()
+    }
+
+    /// Saves immediately, cancelling any pending debounced save.
+    /// Use when the caller needs a guarantee that data hit the disk (e.g. App Intents).
+    @discardableResult
+    func saveNow() async -> Bool {
+        saveTask?.cancel()
+        return await save()
     }
 
     func setError(_ message: String) {
@@ -136,7 +171,9 @@ final class NotesStore: ObservableObject {
         reminder: Date? = nil,
         isReminderOn: Bool? = nil,
         notificationIdentifiers: [String]? = nil,
-        location: [Double]? = nil
+        location: [Double]? = nil,
+        tags: [String]? = nil,
+        isProtected: Bool? = nil
     ) {
         notes.append(
             NoteModel(
@@ -151,7 +188,9 @@ final class NotesStore: ObservableObject {
                 notificationIdentifiers: notificationIdentifiers?.count == 0
                     ? nil
                     : notificationIdentifiers,
-                location: location
+                location: location,
+                tags: tags,
+                isProtected: isProtected
             )
         )
         scheduleSave()
@@ -171,7 +210,9 @@ final class NotesStore: ObservableObject {
         reminder: Date? = nil,
         isReminderOn: Bool? = nil,
         notificationIdentifiers: [String]? = nil,
-        location: [Double]? = nil
+        location: [Double]? = nil,
+        tags: [String]? = nil,
+        isProtected: Bool? = nil
     ) {
         if let index = notes.firstIndex(where: { $0.id == note.id }) {
             notes[index] = NoteModel(
@@ -192,7 +233,9 @@ final class NotesStore: ObservableObject {
                     : notificationIdentifiers,
                 location: location ?? note.location,
                 isDeleted: note.isDeleted,
-                deletedAt: note.deletedAt
+                deletedAt: note.deletedAt,
+                tags: tags ?? note.tags,
+                isProtected: isProtected ?? note.isProtected
             )
             scheduleSave()
         }
@@ -224,7 +267,9 @@ final class NotesStore: ObservableObject {
                 notificationIdentifiers: note.notificationIdentifiers,
                 location: note.location,
                 isDeleted: true,
-                deletedAt: Date()
+                deletedAt: Date(),
+                tags: note.tags,
+                isProtected: note.isProtected
             )
             scheduleSave()
         }
@@ -248,7 +293,9 @@ final class NotesStore: ObservableObject {
                 notificationIdentifiers: note.notificationIdentifiers,
                 location: note.location,
                 isDeleted: false,
-                deletedAt: nil
+                deletedAt: nil,
+                tags: note.tags,
+                isProtected: note.isProtected
             )
             scheduleSave()
         }
@@ -327,5 +374,9 @@ final class NotesStore: ObservableObject {
 
     var deletedNotes: [NoteModel] {
         notes.filter { $0.isDeleted }.sorted { ($0.deletedAt ?? .distantPast) > ($1.deletedAt ?? .distantPast) }
+    }
+
+    var allTags: [String] {
+        Set(activeNotes.flatMap { $0.tags }).sorted()
     }
 }
