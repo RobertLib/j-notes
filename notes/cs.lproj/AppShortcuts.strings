@@ -1,0 +1,14 @@
+/*
+  AppShortcuts.strings
+  notes
+
+  Mluvené fráze pro App Shortcuts. Jsou zde, a ne v Localizable.strings, protože
+  App Intents je načítá jen z tohoto souboru. Každá fráze musí obsahovat
+  ${applicationName}, jinak build selže.
+
+  Vazba „v aplikaci ${applicationName}“ je zvolena schválně: název se dosazuje
+  beze změny, takže po samotném „v“ by zůstal v nesprávném pádu.
+*/
+
+"Create a note in ${applicationName}" = "Vytvořit poznámku v aplikaci ${applicationName}";
+"Add a new note in ${applicationName}" = "Přidat novou poznámku v aplikaci ${applicationName}";

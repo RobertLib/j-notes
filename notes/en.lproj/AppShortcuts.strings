@@ -1,0 +1,11 @@
+/*
+  AppShortcuts.strings
+  notes
+
+  Spoken App Shortcut phrases. These live here rather than in
+  Localizable.strings because App Intents resolves phrases from this file only.
+  Every phrase must contain ${applicationName} or the build fails.
+*/
+
+"Create a note in ${applicationName}" = "Create a note in ${applicationName}";
+"Add a new note in ${applicationName}" = "Add a new note in ${applicationName}";

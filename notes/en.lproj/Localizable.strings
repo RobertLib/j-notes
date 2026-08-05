@@ -21,9 +21,10 @@
 "map" = "Map";
 "new" = "New";
 "newNote" = "New note";
-"note" = "note";
+"note" = "Note";
 "noteType" = "Note type";
 "noNotes" = "No notes";
+"noSearchResults" = "No notes match your search";
 "noNotesForDate" = "No notes for this date";
 "marker" = "Marker";
 "notes" = "J-Notes";
@@ -38,9 +39,6 @@
 "error" = "Error";
 "ok" = "OK";
 "pt" = "pt";
-"notesCountPlural" = "%lld notes";
-"notesCountPaucal" = "%lld notes";
-"notesCountSingular" = "%lld note";
 "selectNote" = "Select Note";
 "photoLibrary" = "Photo Library";
 "camera" = "Camera";
@@ -60,18 +58,65 @@
 "restore" = "Restore";
 "permanentDelete" = "Delete permanently";
 "permanentDeleteConfirm" = "Permanently delete note?";
+"emptyTrash" = "Empty Trash";
+"emptyTrashConfirm" = "Empty the trash?";
+"emptyTrashMessage" = "Every note in the trash will be deleted permanently. This cannot be undone.";
 "exportNotes" = "Backup Notes";
 "importNotes" = "Restore from Backup";
 "mergeNotes" = "Merge";
 "replaceNotes" = "Replace All";
 "importOptionsMessage" = "Merge will add new notes to existing ones. Replace will delete all notes and replace them with imported ones.";
 "savedLocation" = "Saved location";
-"tags" = "Tags";
 "addTag" = "Add tag";
 "allTags" = "All";
 "protected" = "Protected by biometrics";
 "lockedNote" = "This note is protected";
 "authenticate" = "Unlock";
 "authenticateReason" = "To open this note";
-"widgetDescription" = "See your recent notes at a glance";
 "noteNotFound" = "Note not found";
+"reminderNotScheduled" = "Reminder not set";
+"reminderNotScheduledMessage" = "The note was saved, but iOS would not schedule the reminder. Allow notifications for J-Notes in Settings, then reopen the note to set it again.";
+"locationDenied" = "Location unavailable";
+"locationDeniedMessage" = "J-Notes has no access to your location. Allow it for J-Notes in Settings to centre the map on where you are.";
+
+/* VoiceOver labels for controls that show only an icon */
+"menuOptions" = "Options";
+"close" = "Close";
+"share" = "Share";
+"pin" = "Pin";
+"unpin" = "Unpin";
+"myLocation" = "My location";
+"penType" = "Drawing tool";
+"penWidth" = "Line width";
+"drawingColor" = "Drawing color";
+"eraser" = "Eraser";
+"checklist" = "Checklist";
+"undo" = "Undo";
+"redo" = "Redo";
+
+/* Spoken state of a checklist line, which its box conveys visually */
+"checkboxChecked" = "checked";
+"checkboxUnchecked" = "not checked";
+
+/* Siri and the Shortcuts app */
+"intentCreateNote" = "Create Note";
+"intentCreateNoteDescription" = "Create a new note with title and content";
+"intentParameterTitle" = "Title";
+"intentParameterContent" = "Content";
+"intentNoteCreated" = "Note created successfully";
+"intentNoteCreatedNamed %@" = "Created note '%@'";
+"intentSaveFailed" = "The note could not be saved. If your device is locked, unlock it and try again.";
+"intentEmptyContent" = "The note needs some content. Fill in the Content field and try again.";
+"Create note ${title} with content ${content}" = "Create note ${title} with content ${content}";
+
+/* Error messages */
+"errorSaveFailed" = "Failed to save notes";
+"errorSaveBlocked" = "Notes cannot be saved right now because the existing ones could not be read. Unlock the device and reopen the app — nothing has been overwritten.";
+"errorSaveFailedDetail %@" = "Failed to save notes: %@";
+"errorLoadFailed %@" = "Failed to load notes: %@";
+"errorLoadCorrupt" = "Your notes file could not be read and has been set aside, so nothing was deleted. The app is starting empty — use Restore from Backup if you have one.";
+"errorLoadCorruptRecovered" = "Your notes file could not be read and has been set aside, so nothing was deleted. The notes shown were recovered from an older copy — check them over, and use Restore from Backup if anything is missing.";
+"errorExportFailed %@" = "Backup failed: %@";
+"errorImportFailed %@" = "Restore failed: %@";
+"errorFileAccess" = "Failed to access file";
+"errorFileRead %@" = "Failed to read file: %@";

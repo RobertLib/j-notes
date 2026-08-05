@@ -16,11 +16,20 @@ struct CalendarView: View {
         return notesStore.activeNotes.filter { note in
             guard let reminder = note.reminder else { return false }
             return calendar.isDate(reminder, inSameDayAs: selectedDate)
-        }.sorted { $0.reminder ?? Date() < $1.reminder ?? Date() }
+        }
+        // Every note that got this far has a reminder, so the fallback is
+        // unreachable — `.distantPast` rather than `Date()`, which would have
+        // made the ordering depend on the moment the list was built.
+        .sorted { ($0.reminder ?? .distantPast) < ($1.reminder ?? .distantPast) }
     }
 
     var body: some View {
-        NavigationStack {
+        // Bound once rather than read three times over — for the empty state, for
+        // the rows and for the header's count — each of which filtered and sorted
+        // the whole library again. Same reason `NotesView` binds `noteSections`.
+        let notes = notesForSelectedDate
+
+        return NavigationStack {
             VStack(spacing: 0) {
                 DatePicker(
                     "",
@@ -32,20 +41,23 @@ struct CalendarView: View {
 
                 Divider()
 
-                if notesForSelectedDate.isEmpty {
+                if notes.isEmpty {
                     VStack {
                         Spacer()
+                        // Semantic rather than a fixed 20pt, so it follows
+                        // Dynamic Type — see `NotesView`'s empty state.
                         Text("noNotesForDate")
-                            .font(.system(size: 20))
+                            .font(.title3)
                             .foregroundStyle(.secondary)
                         Spacer()
                     }
                 } else {
                     List {
                         Section {
-                            ForEach(notesForSelectedDate) { note in
+                            ForEach(notes) { note in
                                 NavigationLink {
-                                    NoteDetailView(note: note)
+                                    // Lazily — see `LazyNoteDetail`.
+                                    LazyNoteDetail(note: note)
                                 } label: {
                                     HStack {
                                         Circle()
@@ -66,6 +78,9 @@ struct CalendarView: View {
                                                     Image(systemName: "pencil.tip.crop.circle")
                                                         .font(.system(size: 18))
                                                         .foregroundStyle(Color.accentColor.opacity(0.75))
+                                                        // The body below renders
+                                                        // "Drawing note" already.
+                                                        .accessibilityHidden(true)
                                                 }
                                             }
 
@@ -75,7 +90,7 @@ struct CalendarView: View {
                                             }
 
                                             if note.type == .text {
-                                                Text(note.isProtected ? "•••••••••••" : note.content)
+                                                Text(note.isProtected ? NoteModel.redactedBody : note.content)
                                                     .lineLimit(2)
                                                     .truncationMode(.tail)
                                                     .font(.subheadline)
@@ -89,17 +104,20 @@ struct CalendarView: View {
                                         }
                                     }
                                     .padding(.vertical, 4)
+                                    // One element rather than the four or five
+                                    // pieces it is drawn from — the same treatment,
+                                    // and for the same reason, as the list's own
+                                    // rows. See `NoteRowView`.
+                                    .accessibilityElement(children: .combine)
                                 }
                             }
                         } header: {
-                            let count = notesForSelectedDate.count
-                            if count == 1 {
-                                Text(String(format: NSLocalizedString("notesCountSingular", comment: ""), count))
-                            } else if count >= 2 && count <= 4 {
-                                Text(String(format: NSLocalizedString("notesCountPaucal", comment: ""), count))
-                            } else {
-                                Text(String(format: NSLocalizedString("notesCountPlural", comment: ""), count))
-                            }
+                            // Plural form comes from Localizable.stringsdict so
+                            // each language applies its own rules.
+                            Text(String.localizedStringWithFormat(
+                                NSLocalizedString("notesCount", comment: "Number of notes for the selected day"),
+                                notes.count
+                            ))
                         }
                     }
                 }

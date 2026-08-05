@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>notesCount</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@count@</string>
+		<key>count</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>lld</string>
+			<key>one</key>
+			<string>%lld poznámka</string>
+			<key>few</key>
+			<string>%lld poznámky</string>
+			<!-- Unreachable while the value type above is `lld`: Czech's `many`
+			     category is the one for a number with decimal digits (1,5
+			     poznámky), and an integer never has any. Kept rather than
+			     dropped, because the day this counts something fractional the
+			     fallback would be `other` — "1,5 poznámek", which is wrong in a
+			     way nobody would think to look for. -->
+			<key>many</key>
+			<string>%lld poznámky</string>
+			<key>other</key>
+			<string>%lld poznámek</string>
+		</dict>
+	</dict>
+</dict>
+</plist>

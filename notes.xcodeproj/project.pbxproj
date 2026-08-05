@@ -31,6 +31,11 @@
 		D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AD7F0E28816A32001D5A03 /* LaunchScreenView.swift */; };
 		D4BCED792878022A00AA2B8C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4BCED7B2878022A00AA2B8C /* Localizable.strings */; };
 		D4C1A0012F1B0001000000AA /* CreateNoteIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C1A0022F1B0002000000BB /* CreateNoteIntent.swift */; };
+		D4C1A1012F1B0002000000AA /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C1A1002F1B0002000000AA /* Log.swift */; };
+		D4C1A1052F1B0002000000AA /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = D4C1A1042F1B0002000000AA /* Localizable.stringsdict */; };
+		D4C1A1092F1B0002000000AA /* AppShortcuts.strings in Resources */ = {isa = PBXBuildFile; fileRef = D4C1A1082F1B0002000000AA /* AppShortcuts.strings */; };
+		D4C1A2012F1B0003000000AA /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = D4C1A2002F1B0003000000AA /* PrivacyInfo.xcprivacy */; };
+		D4C1A3012F1B0004000000BA /* PrivacyCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4C1A3022F1B0004000000BB /* PrivacyCover.swift */; };
 		D4E8C7CB2E9D9461003AF427 /* ViewEnums.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8C7CA2E9D9461003AF427 /* ViewEnums.swift */; };
 		D4E8C7E32E9D9DD5003AF427 /* UndoableTextEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8C7E22E9D9DD5003AF427 /* UndoableTextEditor.swift */; };
 		D4E8C7F92E9DA970003AF427 /* DeletedNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8C7F82E9DA970003AF427 /* DeletedNotesView.swift */; };
@@ -72,7 +77,6 @@
 		D4084F8828B0CBCD00B942E5 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		D42BAD8228754F5000F6E98F /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
 		D44967562FFBC00400C8D4F3 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
-		D44967592FFBC0CF00C8D4F3 /* NotesWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesWidget.swift; sourceTree = "<group>"; };
 		D449675E2FFBC2DB00C8D4F3 /* NotesWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = NotesWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D44967602FFBC2DB00C8D4F3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		D44967622FFBC2DB00C8D4F3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -99,6 +103,13 @@
 		D4BCED7A2878022A00AA2B8C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D4BCED7C2878023200AA2B8C /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/Localizable.strings; sourceTree = "<group>"; };
 		D4C1A0022F1B0002000000BB /* CreateNoteIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteIntent.swift; sourceTree = "<group>"; };
+		D4C1A1002F1B0002000000AA /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
+		D4C1A1022F1B0002000000AA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		D4C1A1032F1B0002000000AA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = cs; path = cs.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		D4C1A1062F1B0002000000AA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		D4C1A1072F1B0002000000AA /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = cs.lproj/AppShortcuts.strings; sourceTree = "<group>"; };
+		D4C1A2002F1B0003000000AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D4C1A3022F1B0004000000BB /* PrivacyCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyCover.swift; sourceTree = "<group>"; };
 		D4E8C7CA2E9D9461003AF427 /* ViewEnums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewEnums.swift; sourceTree = "<group>"; };
 		D4E8C7E22E9D9DD5003AF427 /* UndoableTextEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoableTextEditor.swift; sourceTree = "<group>"; };
 		D4E8C7F82E9DA970003AF427 /* DeletedNotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletedNotesView.swift; sourceTree = "<group>"; };
@@ -154,14 +165,6 @@
 			path = Stores;
 			sourceTree = "<group>";
 		};
-		D44967582FFBC0B600C8D4F3 /* NotesWidget */ = {
-			isa = PBXGroup;
-			children = (
-				D44967592FFBC0CF00C8D4F3 /* NotesWidget.swift */,
-			);
-			path = NotesWidget;
-			sourceTree = "<group>";
-		};
 		D449675F2FFBC2DB00C8D4F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,7 +192,6 @@
 				D44967642FFBC2DB00C8D4F3 /* NotesWidget */,
 				D449675F2FFBC2DB00C8D4F3 /* Frameworks */,
 				D4A02B942874A72E0009830B /* Products */,
-				D44967582FFBC0B600C8D4F3 /* NotesWidget */,
 			);
 			sourceTree = "<group>";
 		};
@@ -216,7 +218,11 @@
 				D4A02B9A2874A7300009830B /* Assets.xcassets */,
 				D471E5E928C29A3000E729DE /* InfoPlist.strings */,
 				D4BCED7B2878022A00AA2B8C /* Localizable.strings */,
+				D4C1A1042F1B0002000000AA /* Localizable.stringsdict */,
+				D4C1A1082F1B0002000000AA /* AppShortcuts.strings */,
+				D4C1A1002F1B0002000000AA /* Log.swift */,
 				D4A02B9C2874A7300009830B /* Preview Content */,
+				D4C1A2002F1B0003000000AA /* PrivacyInfo.xcprivacy */,
 				D44967562FFBC00400C8D4F3 /* AppGroup.swift */,
 			);
 			path = notes;
@@ -261,6 +267,7 @@
 				D45A6EAC2875CAEE002B1DB5 /* NoteFormView.swift */,
 				D48C11082882F665004033DE /* NoteListView.swift */,
 				D4A02BA92874ACDB0009830B /* NoteRowView.swift */,
+				D4C1A3022F1B0004000000BB /* PrivacyCover.swift */,
 				D4E8C7E22E9D9DD5003AF427 /* UndoableTextEditor.swift */,
 			);
 			path = Notes;
@@ -406,6 +413,9 @@
 				D4A02B9E2874A7300009830B /* Preview Assets.xcassets in Resources */,
 				D471E5E728C29A3000E729DE /* InfoPlist.strings in Resources */,
 				D4BCED792878022A00AA2B8C /* Localizable.strings in Resources */,
+				D4C1A1052F1B0002000000AA /* Localizable.stringsdict in Resources */,
+				D4C1A1092F1B0002000000AA /* AppShortcuts.strings in Resources */,
+				D4C1A2012F1B0003000000AA /* PrivacyInfo.xcprivacy in Resources */,
 				D4A02B9B2874A7300009830B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -447,7 +457,9 @@
 				D4A02BA62874A7970009830B /* NoteModel.swift in Sources */,
 				D40119592E96DD6300E50C17 /* DrawingView.swift in Sources */,
 				D44967572FFBC00400C8D4F3 /* AppGroup.swift in Sources */,
+				D4C1A1012F1B0002000000AA /* Log.swift in Sources */,
 				D4E8C7E32E9D9DD5003AF427 /* UndoableTextEditor.swift in Sources */,
+				D4C1A3012F1B0004000000BA /* PrivacyCover.swift in Sources */,
 				D4E8C7CB2E9D9461003AF427 /* ViewEnums.swift in Sources */,
 				D4A02BAE2874AFAC0009830B /* NoteDetailView.swift in Sources */,
 				D4AD7F0F28816A32001D5A03 /* LaunchScreenView.swift in Sources */,
@@ -488,6 +500,24 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
+		D4C1A1042F1B0002000000AA /* Localizable.stringsdict */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4C1A1022F1B0002000000AA /* en */,
+				D4C1A1032F1B0002000000AA /* cs */,
+			);
+			name = Localizable.stringsdict;
+			sourceTree = "<group>";
+		};
+		D4C1A1082F1B0002000000AA /* AppShortcuts.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				D4C1A1062F1B0002000000AA /* en */,
+				D4C1A1072F1B0002000000AA /* cs */,
+			);
+			name = AppShortcuts.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -500,20 +530,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = NotesWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NotesWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = NotesWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				INFOPLIST_KEY_CFBundleDisplayName = "J-Notes";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Robert Libšanský";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes.NotesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -522,7 +552,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -536,20 +566,20 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_ENTITLEMENTS = NotesWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NotesWidget/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = NotesWidget;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				INFOPLIST_KEY_CFBundleDisplayName = "J-Notes";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Robert Libšanský";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes.NotesWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -557,7 +587,7 @@
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -569,13 +599,13 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = K6GM85X5D7;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -596,13 +626,13 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = K6GM85X5D7;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notesTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -744,11 +774,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = notes/notes.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"notes/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to location?";
+				INFOPLIST_FILE = notes/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To take photos for drawing notes";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "J-Notes uses Face ID to protect your private notes";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Robert Libšanský";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To display the position of the notes on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -759,12 +794,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
 				PRODUCT_NAME = "J-Notes";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -777,11 +814,16 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = notes/notes.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"notes/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allow access to location?";
+				INFOPLIST_FILE = notes/Info.plist;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSCameraUsageDescription = "To take photos for drawing notes";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "J-Notes uses Face ID to protect your private notes";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2025 Robert Libšanský";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "To display the position of the notes on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -792,12 +834,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = cz.rob.notes;
 				PRODUCT_NAME = "J-Notes";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

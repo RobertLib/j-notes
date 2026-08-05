@@ -7,29 +7,28 @@
     <key>NSPrivacyCollectedDataTypes</key>
     <array/>
     <key>NSPrivacyAccessedAPITypes</key>
+    <!-- Only what the app actually calls. FileTimestamp (C617.1) and DiskSpace
+         (E174.1) were declared here too, and nothing in either target reaches
+         for them: the store reads and writes its file through `Data(contentsOf:)`
+         and `Data.write(to:options:)`, neither of which touches an attribute, and
+         no code asks for a creation date, a modification date or a volume's free
+         space. Confirmed against the built binaries as well as the source — the
+         Release slices reference none of `stat`, `fstat`, `getattrlist` or
+         `statfs`, which is exactly the set App Store Connect scans for. Apple
+         tolerates an over-declaration, but a manifest that claims accesses the app
+         does not make is a claim nobody can check, and it is the file a reviewer
+         reads to find out what this app touches. -->
     <array>
         <dict>
             <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategoryFileTimestamp</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>C617.1</string>
-            </array>
-        </dict>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
             <string>NSPrivacyAccessedAPICategoryUserDefaults</string>
+            <!-- CA92.1 covers UserDefaults.standard (sort order, display style,
+                 last map centre). 1C8F.1 covers the App Group suite the widget
+                 reads its note list from. -->
             <key>NSPrivacyAccessedAPITypeReasons</key>
             <array>
                 <string>CA92.1</string>
-            </array>
-        </dict>
-        <dict>
-            <key>NSPrivacyAccessedAPIType</key>
-            <string>NSPrivacyAccessedAPICategoryDiskSpace</string>
-            <key>NSPrivacyAccessedAPITypeReasons</key>
-            <array>
-                <string>E174.1</string>
+                <string>1C8F.1</string>
             </array>
         </dict>
     </array>

@@ -21,15 +21,21 @@
 "map" = "Mapa";
 "new" = "Nový";
 "newNote" = "Nová poznámka";
-"note" = "poznámka";
+"note" = "Poznámka";
 "noteType" = "Typ poznámky";
 "noNotes" = "Žádné poznámky";
+"noSearchResults" = "Hledání neodpovídá žádná poznámka";
 "noNotesForDate" = "Žádné poznámky pro tento den";
 "marker" = "Zvýrazňovač";
-"notes" = "J-Poznámky";
+/* The app's name, not the word "notes" — it is the list's title and the splash
+   screen, and it has to read the same as the home screen icon, the widget's
+   header and the Siri phrases, none of which are translated either. */
+"notes" = "J-Notes";
 "pen" = "Pero";
 "pencilTool" = "Tužka";
-"pinned" = "Připnutý";
+/* A section header over a group of notes, not a label on one — so the plural
+   agrees with "poznámky", where "Připnutý" agreed with nothing on screen. */
+"pinned" = "Připnuté";
 "reminder" = "Připomínka";
 "save" = "Uložit";
 "textNote" = "Textová poznámka";
@@ -38,9 +44,6 @@
 "error" = "Chyba";
 "ok" = "OK";
 "pt" = "b";
-"notesCountPlural" = "%lld poznámek";
-"notesCountPaucal" = "%lld poznámky";
-"notesCountSingular" = "%lld poznámka";
 "selectNote" = "Vyberte poznámku";
 "photoLibrary" = "Knihovna fotek";
 "camera" = "Fotoaparát";
@@ -60,18 +63,65 @@
 "restore" = "Obnovit";
 "permanentDelete" = "Smazat trvale";
 "permanentDeleteConfirm" = "Trvale smazat poznámku?";
+"emptyTrash" = "Vysypat koš";
+"emptyTrashConfirm" = "Vysypat koš?";
+"emptyTrashMessage" = "Všechny poznámky v koši budou trvale smazány. Tuto akci nelze vzít zpět.";
 "exportNotes" = "Zálohovat poznámky";
 "importNotes" = "Obnovit ze zálohy";
 "mergeNotes" = "Sloučit";
 "replaceNotes" = "Nahradit vše";
 "importOptionsMessage" = "Sloučit přidá nové poznámky k existujícím. Nahradit smaže všechny poznámky a nahradí je importovanými.";
 "savedLocation" = "Uložená poloha";
-"tags" = "Štítky";
 "addTag" = "Přidat štítek";
 "allTags" = "Vše";
 "protected" = "Chráněno biometrikou";
 "lockedNote" = "Tato poznámka je chráněna";
 "authenticate" = "Odemknout";
 "authenticateReason" = "Pro otevření poznámky";
-"widgetDescription" = "Přehled vašich posledních poznámek";
 "noteNotFound" = "Poznámka nenalezena";
+"reminderNotScheduled" = "Připomínka nenastavena";
+"reminderNotScheduledMessage" = "Poznámka byla uložena, ale iOS připomínku nenaplánoval. Povolte J-Poznámkám oznámení v Nastavení a poznámku pak otevřete znovu.";
+"locationDenied" = "Poloha není dostupná";
+"locationDeniedMessage" = "J-Poznámky nemají přístup k vaší poloze. Povolte jim ho v Nastavení, aby mohly mapu vycentrovat na místo, kde jste.";
+
+/* Popisky pro VoiceOver u ovládacích prvků bez textu */
+"menuOptions" = "Možnosti";
+"close" = "Zavřít";
+"share" = "Sdílet";
+"pin" = "Připnout";
+"unpin" = "Odepnout";
+"myLocation" = "Moje poloha";
+"penType" = "Kreslicí nástroj";
+"penWidth" = "Tloušťka čáry";
+"drawingColor" = "Barva kresby";
+"eraser" = "Guma";
+"checklist" = "Zaškrtávací seznam";
+"undo" = "Zpět";
+"redo" = "Znovu";
+
+/* Spoken state of a checklist line, which its box conveys visually */
+"checkboxChecked" = "zaškrtnuto";
+"checkboxUnchecked" = "nezaškrtnuto";
+
+/* Siri a aplikace Zkratky */
+"intentCreateNote" = "Vytvořit poznámku";
+"intentCreateNoteDescription" = "Vytvoří novou poznámku s nadpisem a obsahem";
+"intentParameterTitle" = "Nadpis";
+"intentParameterContent" = "Obsah";
+"intentNoteCreated" = "Poznámka byla vytvořena";
+"intentNoteCreatedNamed %@" = "Poznámka „%@“ byla vytvořena";
+"intentSaveFailed" = "Poznámku nebylo možné uložit. Pokud je zařízení zamčené, odemkněte ho a zkuste to znovu.";
+"intentEmptyContent" = "Poznámka musí mít obsah. Vyplňte pole Obsah a zkuste to znovu.";
+"Create note ${title} with content ${content}" = "Vytvořit poznámku ${title} s obsahem ${content}";
+
+/* Chybové hlášky */
+"errorSaveFailed" = "Poznámky se nepodařilo uložit";
+"errorSaveBlocked" = "Poznámky teď nelze uložit, protože se nepodařilo přečíst ty stávající. Odemkněte zařízení a otevřete aplikaci znovu — nic nebylo přepsáno.";
+"errorSaveFailedDetail %@" = "Poznámky se nepodařilo uložit: %@";
+"errorLoadFailed %@" = "Poznámky se nepodařilo načíst: %@";
+"errorLoadCorrupt" = "Soubor s poznámkami se nepodařilo přečíst a byl odložen, takže nic nebylo smazáno. Aplikace startuje prázdná — pokud máte zálohu, použijte Obnovit ze zálohy.";
+"errorLoadCorruptRecovered" = "Soubor s poznámkami se nepodařilo přečíst a byl odložen, takže nic nebylo smazáno. Zobrazené poznámky pocházejí ze starší kopie — zkontrolujte je, a pokud něco chybí, použijte Obnovit ze zálohy.";
+"errorExportFailed %@" = "Zálohování selhalo: %@";
+"errorImportFailed %@" = "Obnovení ze zálohy selhalo: %@";
+"errorFileAccess" = "K souboru se nepodařilo získat přístup";
+"errorFileRead %@" = "Soubor se nepodařilo přečíst: %@";

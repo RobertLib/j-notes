@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+	Everything else in this app's Info.plist is generated from the
+	INFOPLIST_KEY_* build settings, which is why this file did not exist until
+	now. CFBundleURLTypes is an array of dictionaries, and those settings can
+	only carry strings and arrays of strings — so the widget's deep link needed
+	somewhere to declare its scheme. Xcode merges the generated keys into this
+	file, so the usage descriptions and the rest are still set in the project
+	rather than repeated here; CI asserts they survive into the built plist.
+
+	The scheme itself is spelled out in notes/AppGroup.swift and again in
+	NotesWidget/NotesWidget.swift, and scripts/check-shared-contract.sh asserts
+	that all three agree. An undeclared scheme is a silent failure: the tap opens
+	the app on the list, exactly as it did before the link existed.
+-->
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>cz.rob.notes</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>j-notes</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

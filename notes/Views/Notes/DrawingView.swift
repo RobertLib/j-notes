@@ -22,43 +22,37 @@ struct DrawingCanvasRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> PKCanvasView {
         canvas.drawingPolicy = .anyInput
         canvas.tool = isDraw ? ink : eraser
-        canvas.backgroundColor = UIColor(white: 1.0, alpha: 1.0) // Force white background in both light and dark mode
         canvas.overrideUserInterfaceStyle = .light // Force light mode for canvas
         canvas.delegate = context.coordinator
-        updateBackgroundImage(canvas)
+        applyBackgroundTransparency(canvas)
         return canvas
     }
 
     func updateUIView(_ uiView: PKCanvasView, context: Context) {
         uiView.tool = isDraw ? ink : eraser
-        updateBackgroundImage(uiView)
+        applyBackgroundTransparency(uiView)
     }
 
-    private func updateBackgroundImage(_ canvasView: PKCanvasView) {
-        // Remove existing background image views
-        canvasView.subviews.forEach { subview in
-            if subview.tag == 999 {
-                subview.removeFromSuperview()
-            }
-        }
-
-        // Make canvas background clear if there's an image
+    /// Lets the picture behind the canvas show through, or paints it white when
+    /// there is none.
+    ///
+    /// The photo itself is drawn by `DrawingCanvasView`, in the layer below this
+    /// one. This used to insert a tagged `UIImageView` into the canvas as well,
+    /// which drew the very same picture at the very same aspect-fit rect a second
+    /// time — two copies of every background photo in memory, and a stack of
+    /// subview bookkeeping (a tag to find it by, an identity check to avoid
+    /// rebuilding it, a flicker workaround for when that went wrong) that only
+    /// existed to keep the duplicate in step with the original.
+    private func applyBackgroundTransparency(_ canvasView: PKCanvasView) {
         if backgroundImage != nil {
             canvasView.backgroundColor = .clear
             canvasView.isOpaque = false
         } else {
+            // Opaque white in both light and dark mode — the same ground the
+            // drawing is composited onto when it is rendered for the detail view
+            // and the share sheet. See `DrawingRenderer.render`.
             canvasView.backgroundColor = .white
             canvasView.isOpaque = true
-        }
-
-        // Add new background image if available
-        if let image = backgroundImage {
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFit
-            imageView.frame = canvasView.bounds
-            imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-            imageView.tag = 999
-            canvasView.insertSubview(imageView, at: 0)
         }
     }
 
@@ -97,9 +91,10 @@ struct DrawingCanvasView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            // Background layer
+            // The drawing's backdrop, and the only copy of it — the canvas above
+            // goes transparent so this shows through. See
+            // `applyBackgroundTransparency`.
             ZStack {
-                // Background image if available
                 if let image = backgroundImage {
                     Image(uiImage: image)
                         .resizable()
@@ -167,6 +162,7 @@ struct DrawingCanvasView: View {
                                 .foregroundStyle(Color.accentColor)
                                 .frame(width: 40, height: 40)
                         }
+                        .accessibilityLabel("penType")
                     } else {
                         // When eraser is active, button switches back to last used pen
                         Button(action: {
@@ -179,6 +175,7 @@ struct DrawingCanvasView: View {
                                 .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel("penType")
                     }
 
                     Divider()
@@ -202,6 +199,8 @@ struct DrawingCanvasView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("penWidth")
+                    .accessibilityValue("\(Int(penWidth))")
 
                     Divider()
                         .frame(height: 25)
@@ -210,6 +209,7 @@ struct DrawingCanvasView: View {
                     ColorPicker("", selection: $color)
                         .labelsHidden()
                         .frame(width: 40, height: 40)
+                        .accessibilityLabel("drawingColor")
                         .onChange(of: color) { _, _ in
                             // When color changes, switch back to drawing mode
                             isDraw = true
@@ -229,6 +229,7 @@ struct DrawingCanvasView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("eraser")
 
                     Spacer()
 
@@ -243,6 +244,7 @@ struct DrawingCanvasView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("clear")
                     .confirmationDialog(
                         "clearDrawingConfirm",
                         isPresented: $showClearConfirmation,
@@ -251,6 +253,12 @@ struct DrawingCanvasView: View {
                         Button("clear", role: .destructive) {
                             canvas.drawing = PKDrawing()
                             backgroundImage = nil
+                            // Assigning `drawing` does not reliably reach the
+                            // canvas delegate, and the form's Save button is
+                            // bound to what that callback reports — so it is
+                            // called here rather than waited for. Without it a
+                            // cleared drawing could still look saveable.
+                            onDrawingChanged?()
                         }
                         Button("cancel", role: .cancel) {}
                     }

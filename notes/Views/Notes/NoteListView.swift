@@ -21,43 +21,41 @@ struct NoteListView: View {
 
     private func deleteNote(note: NoteModel) {
         withAnimation {
-            // Move to trash instead of permanent delete
+            // Move to trash instead of permanent delete. Cancelling the note's
+            // reminder is the store's job — see `NotesStore.moveToTrash`.
             notesStore.moveToTrash(note: note)
-        }
-
-        Task {
-            await NotificationManager.instance.removeNotifications(
-                identifiers: note.notificationIdentifiers
-            )
-        }
-    }
-
-    private func moveNote(offsets: IndexSet, offset: Int) {
-        withAnimation {
-            notesStore.moveNote(from: offsets, to: offset)
         }
     }
 
     var body: some View {
         ForEach(notes) { note in
-            NoteRowView(note: note, displayStyle: displayStyle)
-                .swipeActions(edge: .leading) {
-                    Button {
-                        togglePinned(note: note)
-                    } label: {
-                        let systemName =
-                            "pin\(note.pinned ? ".slash" : "").fill"
+            // Value-based, so the same list serves both of `NotesView`'s
+            // containers: a stack pushes the route, a split view selects it. See
+            // `NotesRoute`.
+            NavigationLink(value: NotesRoute.note(note.id)) {
+                NoteRowView(note: note, displayStyle: displayStyle)
+            }
+            .swipeActions(edge: .leading) {
+                Button {
+                    togglePinned(note: note)
+                } label: {
+                    let systemName =
+                        "pin\(note.pinned ? ".slash" : "").fill"
 
-                        Image(systemName: systemName)
-                    }.tint(.accentColor)
+                    Image(systemName: systemName)
                 }
-                .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
-                        deleteNote(note: note)
-                    } label: {
-                        Image(systemName: "trash.fill")
-                    }.tint(.red)
+                .tint(.accentColor)
+                .accessibilityLabel(note.pinned ? "unpin" : "pin")
+            }
+            .swipeActions(edge: .trailing) {
+                Button(role: .destructive) {
+                    deleteNote(note: note)
+                } label: {
+                    Image(systemName: "trash.fill")
                 }
+                .tint(.red)
+                .accessibilityLabel("delete")
+            }
         }
         .onDelete { indexSet in
             indexSet.forEach { index in
@@ -69,11 +67,17 @@ struct NoteListView: View {
 }
 
 #Preview {
-    NoteListView(
-        notes: [
-            NoteModel(title: "Title", content: "Lorem ipsum")
-        ],
-        displayStyle: .standard
-    )
+    // The rows are list rows carrying value-based links, so they need both a list
+    // to sit in and a stack to push into.
+    NavigationStack {
+        List {
+            NoteListView(
+                notes: [
+                    NoteModel(title: "Title", content: "Lorem ipsum")
+                ],
+                displayStyle: .standard
+            )
+        }
+    }
     .environment(NotesStore())
 }

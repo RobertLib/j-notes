@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    # Needs the iOS 26 SDK: the drawing toolbar and the map button compile
+    # against `glassEffect`, which older SDKs do not have even though the
+    # deployment target is still 18.0.
+    runs-on: macos-26
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Both of these run before the build rather than after it. They need nothing
+      # but the checkout and they finish in seconds, where a build and a test run
+      # on a macOS runner take minutes — so a renamed localization key or a drifted
+      # App Group identifier now fails the job straight away instead of after the
+      # slowest part of it has already been paid for.
+
+      # A missing localization key is invisible at build time — the app just
+      # shows the raw key to the user — so it is asserted here.
+      - name: Localization parity
+        run: ./scripts/check-localization.sh
+
+      # The app and the widget share no code, so the App Group identifier and the
+      # payload's shape are written out twice. A mismatch compiles fine and leaves
+      # the widget showing "No notes" forever.
+      - name: App and widget contract
+        run: ./scripts/check-shared-contract.sh
+
+      - name: Show versions
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Install xcbeautify
+        run: brew list xcbeautify >/dev/null 2>&1 || brew install xcbeautify
+
+      # Resolved at runtime rather than hard-coded, so a runner image that
+      # renames its simulators does not break the build.
+      - name: Pick a simulator
+        id: sim
+        run: |
+          set -euo pipefail
+          udid=$(xcrun simctl list devices available \
+            | grep -oE 'iPhone [^(]*\([0-9A-F-]{36}\)' \
+            | head -1 \
+            | grep -oE '[0-9A-F-]{36}')
+          if [ -z "$udid" ]; then
+            echo "No iPhone simulator available"
+            xcrun simctl list devices available
+            exit 1
+          fi
+          echo "Using simulator $udid"
+          echo "udid=$udid" >> "$GITHUB_OUTPUT"
+
+      # Signing is unavailable on a runner, so build unsigned. The scheme is
+      # shared in xcshareddata specifically so this step can find it.
+      - name: Build
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project notes.xcodeproj \
+            -scheme notes \
+            -destination 'id=${{ steps.sim.outputs.udid }}' \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcbeautify
+
+      - name: Test
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project notes.xcodeproj \
+            -scheme notes \
+            -destination 'id=${{ steps.sim.outputs.udid }}' \
+            -configuration Debug \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcbeautify
+
+      # The configuration that actually ships, which nothing here used to build.
+      # Release turns on whole-module optimization and strips the assertions
+      # Debug compiles in, so it can fail — or warn — where Debug does not, and
+      # the first anyone would have found out is at the archive that was meant to
+      # go to the App Store. Built for a real device rather than the simulator so
+      # the arm64 slice is covered too, and unsigned because a runner has no
+      # signing identity.
+      - name: Build (Release)
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project notes.xcodeproj \
+            -scheme notes \
+            -destination 'generic/platform=iOS' \
+            -configuration Release \
+            -derivedDataPath build-release \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcbeautify
+
+      # Camera and Face ID hard-fail at runtime without these keys, and
+      # InfoPlist.strings only localizes keys that already exist, so their
+      # presence in the built Info.plist is asserted rather than assumed.
+      - name: Required usage descriptions and privacy manifests
+        run: |
+          set -euo pipefail
+          app=build/Build/Products/Debug-iphonesimulator/J-Notes.app
+
+          for key in NSCameraUsageDescription NSFaceIDUsageDescription \
+                     NSLocationWhenInUseUsageDescription; do
+            if ! plutil -p "$app/Info.plist" | grep -q "\"$key\""; then
+              echo "FAIL  $key is missing from the built Info.plist"
+              exit 1
+            fi
+            echo "ok    $key"
+          done
+
+          for manifest in "$app/PrivacyInfo.xcprivacy" \
+                          "$app/PlugIns/NotesWidgetExtension.appex/PrivacyInfo.xcprivacy"; do
+            if [ ! -f "$manifest" ]; then
+              echo "FAIL  privacy manifest missing: ${manifest#"$app"/}"
+              exit 1
+            fi
+            echo "ok    privacy manifest ${manifest#"$app"/}"
+          done
