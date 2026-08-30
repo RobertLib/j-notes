@@ -51,6 +51,33 @@ struct ContentView: View {
                 MapView()
             }
         }
+        #if DEBUG
+        // Where an App Store pose is applied. The tab is set directly because it
+        // is this view's own state; the note goes through the router, which is
+        // the same door a tapped reminder and a tapped widget come through — so
+        // the pose photographs the app's own navigation rather than a second one
+        // written for the camera. See notes/Support/ScreenshotScenes.swift.
+        .onAppear {
+            guard Shots.isActive else { return }
+
+            selectedTab = Shots.tab
+            if let id = Shots.noteToOpen {
+                notificationRouter.noteToOpen = id
+            }
+            Shots.markReady()
+        }
+        // The App Preview's tour, which is a pose that keeps moving. Both
+        // closures are this view's own assignments — `Shots` knows what the tour
+        // does, and this knows how to do it.
+        .task {
+            guard Shots.isTour else { return }
+
+            await Shots.runTour(
+                tab: { selectedTab = $0 },
+                open: { notificationRouter.noteToOpen = $0 }
+            )
+        }
+        #endif
         // A reminder can be tapped while the calendar or the map is on screen, and
         // the note is pushed onto the list's navigation stack — so the list has to
         // come forward first or the push would happen out of sight.

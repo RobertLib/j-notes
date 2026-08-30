@@ -249,12 +249,23 @@ notes/                        # App target
 │                                  # presentation and tap-to-note routing
 ├── Intents/
 │   └── CreateNoteIntent.swift
+├── Support/
+│   └── ScreenshotScenes.swift  # `#if DEBUG` App Store poses: seeds the
+│                               # notes file before the store reads it and
+│                               # asks the app to open something
 ├── en.lproj/ , cs.lproj/     # Localizable.strings, .stringsdict,
 │                             # InfoPlist.strings, AppShortcuts.strings
 └── PrivacyInfo.xcprivacy
 
 NotesWidget/                  # Widget extension target
 notesTests/                   # Unit tests
+Tools/                        # App Store media, see AppStore/screenshots.md
+├── appstore_media.sh         # shoots the screenshots, records the previews
+├── appstore_compose.sh       # the colour, the heading and the device frame
+├── appstore_video.swift      # cuts the recordings into one preview
+├── appstore_conform.swift    # pins it to Apple's format table
+└── appstore_frames.swift     # pulls stills out, to check a cut
+AppStore/                     # The App Store Connect texts, see AppStore/README.md
 ```
 
 ## Requirements
@@ -547,6 +558,32 @@ J-Notes respects your privacy:
   the user can find their own note; only its body is masked until they
   authenticate. Everything that leaves the app — the widget's shared container
   and the lock screen — is redacted in full
+
+## App Store
+
+The App Store Connect texts live in [AppStore/](AppStore/) — the name, subtitle,
+promotional text, description, keywords and release notes for `en-US`, `en-GB`
+and `cs`, plus the privacy policy and the note for the reviewer. Nothing is
+uploaded automatically: open the file, copy it, paste it into the matching field.
+
+The screenshots and the App Previews are generated rather than kept in the
+repository:
+
+```bash
+Tools/appstore_media.sh      # shoots both devices in both languages
+Tools/appstore_compose.sh    # wraps each shot in its colour, heading and frame
+```
+
+Every pose seeds the notes file and then asks the app to open something, so what
+is photographed is the app reading its own store — see
+[AppStore/screenshots.md](AppStore/screenshots.md) for the shot list, what the
+simulator has to be told first, and why the preview's audio track carries
+inaudible dither rather than nothing at all.
+
+The reasoning behind every one of those texts — what the competition looks like
+on both storefronts, which search terms Apple actually suggests, and the
+alternatives that were rejected — is in
+[AppStore/alternatives.md](AppStore/alternatives.md).
 
 ## Contributing
 

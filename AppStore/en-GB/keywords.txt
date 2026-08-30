@@ -1,0 +1,1 @@
+widget,screen,reminder,memo,checklist,sketch,password,private,free,pencil,diary,list,internet,map

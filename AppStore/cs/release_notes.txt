@@ -1,0 +1,14 @@
+Velká aktualizace. Všechno níže je nové od verze 1.0.9.
+
+• Widgety na ploše ve všech třech velikostech a widgety na zamčené obrazovce ve všech třech tvarech — ťuknutí na poznámku ve widgetu otevře tu poznámku, ne seznam
+• Připomínka se ukáže jako banner, i když je aplikace otevřená, a ťuknutí otevře poznámku, ke které patří
+• Odznak počítá jen připomínky, které jste ještě neviděli, a čekající připomínky se přečíslují, když jednu nastavíte před ně
+• Připomínku, kterou iOS nenaplánuje, aplikace ohlásí, místo aby ji tiše zahodila, a vybrané datum si nechá
+• Poznámky v koši se dají otevřít, než se rozhodnete, a koš jde vysypat najednou
+• Štítky lišící se jen velikostí písmen jsou jeden štítek a filtr se sám zruší, jakmile ho žádná poznámka nemá
+• Mapa zůstane tam, kam jste ji posunuli, a tlačítko polohy funguje i s pozicí, kterou už má
+• Na iPadu jsou seznam a poznámka vedle sebe, při otočení i v Split View
+• Poznámky se zapisují mimo hlavní vlákno, takže odškrtnutí políčka už nečeká na celou knihovnu
+• VoiceOver čte řádek poznámky i řádek se zaškrtávátkem jako jeden prvek a každý ovládací prvek bez popisku má popisek
+• Text na zvýrazňovací barvě splňuje kontrastní poměr 4,5:1
+• Tmavá a tónovaná varianta ikony aplikace

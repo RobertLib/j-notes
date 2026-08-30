@@ -1,0 +1,52 @@
+No account or sign-in is required, and there is nothing to unlock. The whole app
+is available on the first launch. There are no in-app purchases, no subscription
+and no advertising — the app contains no StoreKit code and no ad or analytics
+SDK of any kind.
+
+Fully offline. The app contains no networking code (no URLSession, no WebKit, no
+third-party libraries) and makes no network requests. Notes are stored in a
+single JSON file in the app's own container, written with
+.completeFileProtection so it is unreadable while the device is locked. Sort
+order, display style and the last map centre are in UserDefaults; the widget
+reads its note list from a shared App Group container (group.cz.rob.notes). Both
+are declared in notes/PrivacyInfo.xcprivacy, reasons CA92.1 and 1C8F.1. No data
+is collected and nothing leaves the device.
+
+The three permissions and why they are asked for:
+
+- Location (When In Use). A note records the place it was created, so the map
+  view can show where notes were written and group the ones made in the same
+  spot. The app asks for a fix only when the user does something that needs one
+  — opening the map, pressing the locate button, or creating a note — never on
+  launch. Refusing it costs only the map; every other part of the app works.
+
+- Camera. Only to take a photo to draw on top of, as the background of a drawing
+  note. The photo library is used the same way. Nothing is uploaded.
+
+- Face ID. Individual notes can be marked protected by the user, and are then
+  locked behind Face ID or Touch ID, falling back to the device passcode. This
+  is local authentication only; there is no account behind it.
+
+Notifications are local only (UserNotifications), scheduled for reminder dates
+the user sets on a note. There is no push server and no remote notification
+entitlement.
+
+How to reach each feature: the "+" button creates a note and offers a text note
+or a drawing note. Inside the form are the colour, the tags, the reminder toggle
+and the "protect with Face ID" toggle. Swiping a row from the left pins it, from
+the right deletes it to the trash. The toolbar menu holds the sort order, the
+display style, the trash, "Backup Notes" and "Restore from Backup". The tab bar
+switches between the list, the calendar (notes by reminder date) and the map
+(notes by location). Widgets are added from the Home Screen and the Lock Screen
+in the usual way; tapping a note in one opens that note through the j-notes://
+URL scheme. "Create a note" is exposed to Siri and Shortcuts through App Intents.
+
+Backup and restore write and read a plain JSON file through the system document
+picker. Nothing is transmitted; the destination is whatever the user picks in
+Files.
+
+Localisation: English and Czech, switched by the device language. There is no
+in-app language setting.
+
+The app supports iPhone and iPad. On iPad the list and the selected note are
+shown side by side.

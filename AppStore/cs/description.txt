@@ -1,0 +1,42 @@
+Poznámky, které zůstanou ve vašem iPhonu. Napište je, nakreslete je, zamkněte je pod Face ID a dejte si je na plochu. Bez účtu, bez cloudu, bez reklam, bez nákupů v aplikaci a bez čehokoli, co by se dalo předplatit.
+
+NAPIŠTE JI, NEBO NAKRESLETE
+Poznámku napište, nebo nakreslete perem, fixem a tužkou — Apple Pencilem i prstem, s nastavitelnou šířkou a barvou. Kreslit můžete přes fotku z knihovny nebo rovnou z fotoaparátu. Zpět a Znovu máte při psaní hned pod klávesnicí. Odškrtávat se dá přímo v textu: řádek se zaškrtávátkem je součástí poznámky, ne zvláštního seznamu, a políčko reaguje kdekoli na něj ťuknete.
+
+VŠECHNO TAM, KDE JSTE TO NECHALI
+• Důležité poznámky připnete nahoru
+• Obarvíte je, oštítkujete a podle štítku filtrujete jedním ťuknutím
+• Hledáte najednou v názvech, textech i štítcích
+• Kompaktní, standardní nebo podrobné řádky, zapamatované mezi spuštěními
+• Smazané poznámky čekají 30 dní v koši a dají se otevřít, než se rozhodnete
+• Na iPadu jsou seznam a poznámka vedle sebe, při otočení i v Split View
+
+PŘIPOMÍNKY, KTERÉ DORAZÍ
+Nastavte poznámce datum a čas a vrátí se jako oznámení — jako banner i tehdy, když je aplikace zrovna otevřená, a ťuknutí otevře přímo tu poznámku, ne seznam. Pokud ji iOS naplánovat nemůže, aplikace to řekne, místo aby ji tiše ztratila. Poznámky s připomínkou se navíc řadí do kalendáře podle dne, kdy mají přijít.
+
+POZNÁMKY, KTERÉ VĚDÍ, KDE VZNIKLY
+Poznámka si pamatuje místo, kde jste ji psali, a mapa je ukáže všechny — poznámky ze stejného místa sdílejí jednu špendlíkovou značku. Hodí se na výlet, na prohlídku, na obchůzku po areálu a všude tam, kde je místo polovinou toho, co jste si zapsali.
+
+ZAMČENÁ ZNAMENÁ ZAMČENÁ
+• Kteroukoli poznámku zamknete pod Face ID nebo Touch ID
+• Soubor s poznámkami je nečitelný, dokud je zařízení zamčené
+• Odemčená poznámka se zakryje dřív, než si iOS pořídí náhled do přepínače aplikací
+• Připomínka zamčené poznámky dorazí na zamčenou obrazovku bez názvu i bez textu
+• Vyhledávání se do zamčené poznámky nedívá
+
+NA PLOŠE I NA ZAMČENÉ OBRAZOVCE
+Malý, střední a velký widget na ploše ukazují nejnovější poznámky, připnuté první — a ťuknutí otevře tu poznámku, ne seznam. Na zamčené obrazovce jsou všechny tři tvary: nejnovější poznámka jako řádek, jako název s řádkem textu, nebo jen kolik poznámek máte. Zamčená poznámka ukáže visací zámek a nic jiného, v každé velikosti. O novou poznámku můžete požádat Siri nebo si ji dát do Zkratky.
+
+PRO KAŽDÉHO
+Každý ovládací prvek bez popisku má popisek pro VoiceOver a řádek poznámky se přečte jako jedna věc, ne jako sedm kousků, ze kterých je poskládaný. Řádek se zaškrtávátkem řekne, jestli je odškrtnutý. Texty respektují nastavenou velikost písma, včetně zaškrtávátka i plochy, kterou se odškrtává. Tlačítko odemčení nabídne způsob, který vaše zařízení opravdu má.
+
+VAŠE, A JEN VAŠE
+• Žádné reklamy
+• Žádné nákupy v aplikaci, žádné předplatné
+• Žádný účet, žádné přihlašování, žádný cloud, žádný sběr dat
+• Funguje kompletně offline
+• Všechno zazálohujete a obnovíte jedním souborem
+• Čeština i angličtina
+• iPhone i iPad
+
+Jen vaše poznámky. Nic víc.

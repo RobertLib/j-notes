@@ -701,6 +701,15 @@ final class NotesStore {
 
     init(fileURL: URL? = nil) {
         self.fileURL = fileURL ?? Self.defaultFileURL
+        #if DEBUG
+        // An App Store pose writes the file the load below is about to read. This
+        // is the last moment it can: the store reads in its own initialiser, so
+        // there is no view, no `task` and no `onAppear` early enough to do it
+        // from. Inert without a `-shot` launch argument, which is every launch
+        // but the ones `Tools/appstore_media.sh` makes — the tests included,
+        // since they pass a `fileURL` of their own and no argument.
+        Shots.seed(into: self.fileURL)
+        #endif
         load()
 
         // Expired trash is dropped at launch; persist only if something changed.

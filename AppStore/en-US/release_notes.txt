@@ -1,0 +1,14 @@
+A large update. Everything below is new since 1.0.9.
+
+• Home Screen widgets in all three sizes and Lock Screen widgets in all three shapes — tapping a note in a widget opens that note, not the list
+• A reminder shows as a banner even while the app is open, and tapping it opens the note it belongs to
+• The badge counts only the reminders you have not seen yet, and pending reminders are re-numbered when one is set ahead of them
+• A reminder iOS will not schedule is reported instead of being dropped silently, and the date you picked is kept
+• Trashed notes can be opened before you decide, and the trash can be emptied in one go
+• Tags that differ only in case are one tag, and a filter clears itself once no note carries it
+• The map stays where you panned it, and the locate button works on the fix already on hand
+• On iPad the list and the note sit side by side, through rotation and Split View alike
+• Notes are written off the main thread, so ticking a checkbox no longer waits for the whole library
+• VoiceOver reads a note's row and a checklist line as one element, and every icon-only control is labeled
+• Text on the accent color now meets the 4.5:1 contrast ratio
+• Dark and tinted app icon variants
