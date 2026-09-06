@@ -6,9 +6,9 @@ A large update. Everything below is new since 1.0.9.
 • A reminder iOS will not schedule is reported instead of being dropped silently, and the date you picked is kept
 • Trashed notes can be opened before you decide, and the trash can be emptied in one go
 • Tags that differ only in case are one tag, and a filter clears itself once no note carries it
-• The map stays where you panned it, and the locate button works on the fix already on hand
+• The map stays where you panned it, and the locate button finds you without waiting for a new position
 • On iPad the list and the note sit side by side, through rotation and Split View alike
-• Notes are written off the main thread, so ticking a checkbox no longer waits for the whole library
+• Checking a box is instant, even with a large library of notes
 • VoiceOver reads a note's row and a checklist line as one element, and every icon-only control is labeled
-• Text on the accent color now meets the 4.5:1 contrast ratio
+• Text on the accent color is easier to read
 • Dark and tinted app icon variants

@@ -156,7 +156,7 @@ shaped `cs/`:
 ```
 en-US   J-Notes: Notepad, Lock, Draw   (28)   Private, offline, no ads ever    (29)
 en-GB   J-Notes: Notepad, Lock, Draw   (28)   Secure, offline, no ads ever     (28)
-cs      J-Notes: Poznámky a zápisník   (28)   Se zámkem, offline, bez reklam   (30)
+cs      J-Notes: Poznámky a zápisník   (28)   Soukromé, offline, bez reklam    (29)
 ```
 
 Between the name and the subtitle, `en-US` indexes *j, notes, notepad, lock,
@@ -200,8 +200,9 @@ any order, so *notes lock* and *lock notes* both match whatever the word order i
 
 | Czech | | English | |
 |---|---|---|---|
-| Se zámkem, offline, bez reklam | (30) | Private, offline, no ads ever | (29) |
-| Offline, zdarma, bez reklam | (27) | Secure, offline, no ads ever | (28) |
+| Soukromé, offline, bez reklam | (29) | Private, offline, no ads ever | (29) |
+| Se zámkem, offline, bez reklam | (30) | Secure, offline, no ads ever | (28) |
+| Offline, zdarma, bez reklam | (27) | Locked notes, offline and free | (30) |
 | Zamykací poznámky bez reklam | (28) | Locked notes, offline and free | (30) |
 | Soukromé, offline, bez účtu | (27) | No ads, no account, no cloud | (28) |
 | Kreslení, připomínky, offline | (29) | Sketch, remind, lock. Offline | (29) |
@@ -222,7 +223,7 @@ In use:
 ```
 en-US  widget,screen,reminder,memo,checklist,sketch,password,secure,free,pencil,diary,list,internet,map   (96)
 en-GB  widget,screen,reminder,memo,checklist,sketch,password,private,free,pencil,diary,list,internet,map  (97)
-cs     poznámkový,blok,seznam,úkoly,připomínky,kreslení,heslo,zámek,soukromé,deník,widget,zdarma,mapa      (94)
+cs     poznámkový,blok,seznam,úkoly,připomínky,kreslení,heslo,zámek,skica,deník,widget,zdarma,mapa,kalendář (100)
 ```
 
 Why each of the less obvious ones is there:
@@ -251,11 +252,11 @@ Rules, so that editing does not break it:
 - Do not repeat words from the name or the subtitle, Apple indexes those
   separately. **This applies between the name and the subtitle too.** That is why
   *notes*, *notepad*, *lock*, *draw*, *private* and *offline* are absent from the
-  English lists, and *poznámky*, *zápisník*, *offline* and *reklam* from the
-  Czech one.
+  English lists, and *poznámky*, *zápisník*, *soukromé*, *offline* and *reklam*
+  from the Czech one.
 - Do not put a plural next to its singular ("list" and "lists"), Apple pairs them
-  itself. The Czech set bends this once, for *zámkem* / *zámek*: Czech stemming
-  is unreliable enough that the nominative is worth its five characters.
+  itself. Czech stemming is unreliable enough that this would be worth bending
+  for, but as the sets stand nothing needs it.
 - Do not name competing apps — grounds for rejection. In this category the
   tempting ones are *evernote*, *onenote*, *goodnotes*, *keep* and *notion*, and
   all five are other people's app names.

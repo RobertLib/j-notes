@@ -9,6 +9,109 @@ import PencilKit
 import PhotosUI
 import SwiftUI
 
+/// How a picture picked for a drawing's background is prepared before the app
+/// keeps it.
+///
+/// A capture arrives at the sensor's full resolution — twelve megapixels on a
+/// modest iPhone, forty-eight on a recent one — and the photo library hands over
+/// whatever the file holds. Nothing ever draws that. `DrawingRenderer.render`
+/// composites the note at the canvas's own size at 2×, which is around 722×800
+/// pixels, and `ZoomableDrawingView` magnifies *that* bitmap rather than the
+/// source — so the detail past it was never on its way to the screen at any zoom.
+///
+/// It was on its way to the notes file, though, and that is what made it
+/// expensive rather than merely wasteful: `backgroundImageData` is base64 inside
+/// `notes.json` alongside every other note, `NotesCodec.encode` rewrites the
+/// whole file on every save — a checkbox tick, a pin, a swipe to the trash — and
+/// `NotesStore.notes` holds the bytes in memory for the life of the process. A
+/// handful of photo notes therefore cost megabytes on each of those, repeatedly,
+/// for pixels nothing renders.
+///
+/// Applied where a picture enters the app rather than where one is written, for
+/// the same reason `NoteModel.uniqueTags` is applied at decode: that is the edge.
+/// A note already carrying an oversized photo keeps its bytes untouched —
+/// `jpegData` on an image that was itself decoded from JPEG loses a little more
+/// every pass, which is exactly what `NoteFormView.backgroundImageDataToStore`
+/// exists to avoid, and quietly degrading a picture the user already has would be
+/// a worse bargain than the space it saves.
+enum BackgroundImage {
+    /// The longest side a stored background may have, in pixels.
+    ///
+    /// The canvas is 400 points tall and as wide as the form around it — roughly
+    /// 700 on an iPad — and it is composited at 2×, so this clears the largest
+    /// bitmap the app ever builds from one of these with room to spare.
+    static let maxDimension: CGFloat = 1600
+
+    /// `image` scaled down to fit inside `maxDimension`, or the image itself when
+    /// it already does.
+    ///
+    /// Never scales up: a small picture is left exactly as it is rather than
+    /// resampled into a larger file carrying no more detail than it started with.
+    ///
+    /// Split out as a pure function so the rule can be exercised at all — a photo
+    /// picker is not reachable from a test, the same reason `NoteContentRule`,
+    /// `ReminderFormState` and `NoteLock` live outside the views they serve.
+    nonisolated static func prepared(_ image: UIImage) -> UIImage {
+        // Measured in pixels rather than points. `size` is in points and an image
+        // carries a `scale` of its own, so measuring the wrong one lets a 3×
+        // picture through at three times the size this is meant to cap.
+        let pixelWidth = image.size.width * image.scale
+        let pixelHeight = image.size.height * image.scale
+        let longestSide = max(pixelWidth, pixelHeight)
+
+        // Also what turns away a degenerate image: a zero or NaN side fails this
+        // comparison, so it is handed back untouched rather than fed to the
+        // arithmetic below.
+        guard longestSide > maxDimension else { return image }
+
+        let ratio = maxDimension / longestSide
+
+        // At least one pixel on each side. An extremely long, thin picture would
+        // otherwise round its short side to zero, which renders as nothing at all
+        // rather than as something small.
+        let target = CGSize(
+            width: max(1, (pixelWidth * ratio).rounded()),
+            height: max(1, (pixelHeight * ratio).rounded())
+        )
+
+        let format = UIGraphicsImageRendererFormat.default()
+        // One pixel per point, so the result measures exactly `target` in pixels
+        // rather than that times whatever the screen's scale happens to be.
+        format.scale = 1
+        // Alpha is kept. `jpegData` flattens it on the way to storage either way,
+        // but the form draws this very image over white while the note is being
+        // edited — an opaque context would turn a transparent PNG's background
+        // black on that screen alone.
+        format.opaque = false
+
+        return UIGraphicsImageRenderer(size: target, format: format).image { _ in
+            // `draw(in:)` applies the image's orientation, so the copy comes out
+            // upright rather than carrying a rotation as metadata for each
+            // separate thing that reads it to remember to honour.
+            image.draw(in: CGRect(origin: .zero, size: target))
+        }
+    }
+
+    /// `prepared(_:)`, off the main actor.
+    ///
+    /// Resampling forty-eight megapixels is long enough to drop frames, and both
+    /// callers are on screen when it runs — one is dismissing the camera, the
+    /// other is coming back from the photo picker.
+    nonisolated static func prepare(_ image: UIImage) async -> UIImage {
+        await Task.detached(priority: .userInitiated) { prepared(image) }.value
+    }
+
+    /// The picture `data` holds, decoded and scaled down, both off the main actor.
+    ///
+    /// The decode is the heavier half and it used to run on the main actor, where
+    /// a full-resolution JPEG costs more than the resampling that now follows it.
+    nonisolated static func prepare(data: Data) async -> UIImage? {
+        await Task.detached(priority: .userInitiated) {
+            UIImage(data: data).map(prepared)
+        }.value
+    }
+}
+
 struct DrawingCanvasRepresentable: UIViewRepresentable {
     @Binding var canvas: PKCanvasView
     @Binding var isDraw: Bool
@@ -296,8 +399,12 @@ struct DrawingCanvasView: View {
             guard let newItem else { return }
 
             Task {
+                // Decoded and scaled down off the main actor before it is kept —
+                // the library hands over the file at whatever size it was taken
+                // at, and nothing here draws more than the canvas. See
+                // `BackgroundImage`.
                 if let data = try? await newItem.loadTransferable(type: Data.self),
-                   let image = UIImage(data: data) {
+                   let image = await BackgroundImage.prepare(data: data) {
                     backgroundImage = image
                 }
                 selectedPhotoItem = nil
@@ -354,7 +461,14 @@ struct CameraPicker: UIViewControllerRepresentable {
 
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             if let uiImage = info[.originalImage] as? UIImage {
-                parent.image = uiImage
+                // Scaled down off the main actor — a capture arrives at the
+                // sensor's full resolution, and resampling one of those is long
+                // enough to stutter the camera's dismissal. See `BackgroundImage`.
+                //
+                // The dismissal below deliberately does not wait for it: the
+                // picture lands in the binding a moment later, which is the same
+                // way the photo library's already arrives.
+                Task { parent.image = await BackgroundImage.prepare(uiImage) }
             }
             parent.dismiss()
         }

@@ -100,6 +100,19 @@ struct NotesView: View {
     /// What the split view's detail column is showing. Regular width only.
     @State private var selection: NotesRoute?
 
+    /// The list's edit mode, owned here rather than left to `EditButton`.
+    ///
+    /// The button only appears while there is something to edit, and a control that
+    /// can disappear must not be the only way out of the state it turns on: deleting
+    /// the last note from inside edit mode took the Done button away with it, and
+    /// left the list in a mode with nothing on screen to leave it by — so the next
+    /// note added arrived into a list still showing deletion circles.
+    ///
+    /// The same trap `TagFilter.surviving` exists to close, one screen over: a
+    /// selection outliving the chip that would have cleared it. Holding the binding
+    /// here is what lets the list put the mode back when its last row goes.
+    @State private var editMode: EditMode = .inactive
+
     /// The encoded backup, held only between the user asking for an export and
     /// the sheet closing. See `startExport()`.
     @State private var exportDocument: NotesDocument?
@@ -438,7 +451,14 @@ struct NotesView: View {
             // edit mode there puts a selection circle beside every row and
             // turns the button into something else entirely. Swiping a row
             // still deletes it in both.
-            if detailSelection == nil {
+            //
+            // And only while there is a row to act on. An empty library offered an
+            // Edit button whose whole effect was to put the list into a mode with
+            // nothing in it. Keyed on the store rather than on `sections`, which
+            // narrows with the search field: the button is about the library, and
+            // one that came and went on each keystroke would be worse than one that
+            // sits there. `editMode` above is what stops it stranding the mode.
+            if detailSelection == nil && notesStore.hasActiveNotes {
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                 }
@@ -645,6 +665,16 @@ struct NotesView: View {
             }
         } message: {
             Text("importOptionsMessage")
+        }
+        // Applied to the whole list rather than to the `List` itself, so the
+        // toolbar's `EditButton` reads and writes the very binding the rows
+        // respond to. Left to itself the button owns a mode nothing else can see.
+        .environment(\.editMode, $editMode)
+        // The mode cannot outlive the rows it acts on — see `editMode`. Emptying
+        // the library from inside edit mode takes the Done button with it, so this
+        // is what leaves the mode on its way out.
+        .onChange(of: notesStore.hasActiveNotes) { _, hasNotes in
+            if !hasNotes { editMode = .inactive }
         }
     }
 }

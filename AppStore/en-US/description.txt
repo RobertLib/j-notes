@@ -1,7 +1,7 @@
 Notes that stay on your iPhone. Write them, sketch them, lock them behind Face ID, and put them on your Home Screen. No account, no cloud, no ads, no in-app purchases and nothing to subscribe to.
 
 WRITE IT, OR DRAW IT
-Type a note, or sketch one with pen, marker and pencil — Apple Pencil or your finger, with adjustable width and color. Start a drawing over a photo from your library or straight from the camera. Undo and redo sit under the keyboard while you write. Tick items off inside the text: a checklist line is part of the note rather than a separate list, and the box responds wherever you tap it.
+Type a note, or sketch one with pen, marker and pencil — Apple Pencil or your finger, with adjustable width and color. Start a drawing over a photo from your library or straight from the camera. Undo and redo sit under the keyboard while you write. Check items off inside the text: a checklist line is part of the note rather than a separate list, and the box responds wherever you tap it.
 
 EVERYTHING WHERE YOU LEFT IT
 • Pin the notes that matter to the top
@@ -28,7 +28,7 @@ ON YOUR HOME SCREEN AND LOCK SCREEN
 Small, medium and large Home Screen widgets show your most recent notes, pinned first — and tapping one opens that note, not the list. All three Lock Screen shapes are there too: the newest note as a line, as a title with a line of text, or just how many notes there are. A locked note shows its padlock and nothing else, in every size. Ask Siri to create a note, or put it in a Shortcut.
 
 BUILT FOR EVERYONE
-Every icon-only control is labeled for VoiceOver, and a note's row is announced as one thing rather than as the seven pieces it is drawn from. A checklist line says whether it is ticked. Text follows your Dynamic Type size, including the checkbox and the area that ticks it. The unlock button shows the method your device actually offers.
+Every icon-only control is labeled for VoiceOver, and a note's row is announced as one thing rather than as the seven pieces it is drawn from. A checklist line says whether it is checked. Text follows your Dynamic Type size, including the checkbox and the area you tap to check it. The unlock button shows the method your device actually offers.
 
 YOURS, AND ONLY YOURS
 • No ads

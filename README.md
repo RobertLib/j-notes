@@ -41,7 +41,9 @@ A modern, feature-rich notes application for iOS and iPadOS built with SwiftUI.
 
 - Pen, marker and pencil tools with adjustable width and color
 - Photo library or camera image as a drawing background — a note whose only
-  content is the photo saves too, since the photo is what it renders
+  content is the photo saves too, since the photo is what it renders. It is scaled
+  down to what the canvas can actually draw before it is kept, decoded and
+  resampled off the main actor
 - Pinch-to-zoom viewing of finished drawings
 - Sharing a drawing hands over the picture itself, rendered as a PNG only if the
   share actually goes ahead
@@ -199,7 +201,10 @@ A modern, feature-rich notes application for iOS and iPadOS built with SwiftUI.
   off the main actor and one write at a time — a note's drawing strokes and
   background photo are base64 inside that JSON, so encoding the list is work
   proportional to the whole library, and every checkbox tick and pin used to pay
-  for it before the UI could move again
+  for it before the UI could move again. Which is also why a background photo is
+  capped at the size the canvas can draw on the way in rather than kept at the
+  resolution it was taken at: the file is rewritten whole on every save, so those
+  bytes are paid for again on each one
 - **Services**:
   - PencilKit for drawing
   - CoreLocation for location tracking
@@ -462,6 +467,14 @@ Test coverage includes:
   URL naming no note: `onOpenURL` sees every URL the app is asked to open
 - A kept request counting as a destination, which is what the splash screen reads
   in order to get out of the way of a launch that was started by one
+- A drawing's background photo being scaled down to what the app can draw before
+  it is kept: the longest side capped, the aspect ratio intact, measured in pixels
+  rather than points so a high-scale image cannot slip through, a picture already
+  small enough handed back untouched rather than resampled, and the bytes a note
+  would store actually falling — a capture arrives at the sensor's full resolution
+  and `DrawingRenderer` never composites more than the canvas at 2×, so the rest
+  went into a file that is rewritten on every checkbox tick for pixels nothing
+  renders
 
 CI runs the build, the test suite and a localization parity check on every push
 and pull request — see [.github/workflows/ci.yml](.github/workflows/ci.yml). The

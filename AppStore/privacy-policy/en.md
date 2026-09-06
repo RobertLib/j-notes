@@ -10,7 +10,7 @@ on your device.
 ## In detail
 
 **We collect no data.** The app never asks for your name, email address, phone
-number or any other personal information. No account and no sign-in is required.
+number or any other personal information. No account or sign-in is required.
 
 **It does not connect to the internet.** J-Notes contains no networking code and
 makes no network requests. There is no cloud, no sync and no server behind the
@@ -23,7 +23,7 @@ frameworks and no third-party libraries that transmit anything anywhere.
 subscriptions. Nothing in it is for sale.
 
 **Where your notes are stored.** Notes — including their text, drawings,
-background photos, tags, colours, reminder dates and locations — are stored
+background photos, tags, colors, reminder dates and locations — are stored
 solely on your device, in a file inside the app's own container. That file is
 written with complete file protection, which means iOS keeps it unreadable while
 the device is locked. Your sort order, display style and the last position of the

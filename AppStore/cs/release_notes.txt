@@ -6,9 +6,9 @@ Velká aktualizace. Všechno níže je nové od verze 1.0.9.
 • Připomínku, kterou iOS nenaplánuje, aplikace ohlásí, místo aby ji tiše zahodila, a vybrané datum si nechá
 • Poznámky v koši se dají otevřít, než se rozhodnete, a koš jde vysypat najednou
 • Štítky lišící se jen velikostí písmen jsou jeden štítek a filtr se sám zruší, jakmile ho žádná poznámka nemá
-• Mapa zůstane tam, kam jste ji posunuli, a tlačítko polohy funguje i s pozicí, kterou už má
+• Mapa zůstane tam, kam jste ji posunuli, a tlačítko polohy vás najde i bez čekání na nové zaměření
 • Na iPadu jsou seznam a poznámka vedle sebe, při otočení i v Split View
-• Poznámky se zapisují mimo hlavní vlákno, takže odškrtnutí políčka už nečeká na celou knihovnu
-• VoiceOver čte řádek poznámky i řádek se zaškrtávátkem jako jeden prvek a každý ovládací prvek bez popisku má popisek
-• Text na zvýrazňovací barvě splňuje kontrastní poměr 4,5:1
+• Odškrtnutí políčka je okamžité i u velké knihovny poznámek
+• VoiceOver čte řádek poznámky i řádek se zaškrtávacím políčkem jako jeden prvek a každý ovládací prvek, který je jen ikona, má popisek
+• Text na zvýrazňovací barvě je čitelnější
 • Tmavá a tónovaná varianta ikony aplikace

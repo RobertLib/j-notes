@@ -1122,6 +1122,17 @@ final class NotesStore {
         notes.contains { $0.isDeleted }
     }
 
+    /// Whether there is any note outside the trash.
+    ///
+    /// The counterpart of `hasDeletedNotes`, and there for the same reason: the
+    /// list's toolbar asks on every pass through `body` — to decide whether an
+    /// Edit button has anything to act on — where `activeNotes` allocated a
+    /// filtered array over the whole library to answer a question that stops at
+    /// the first match.
+    var hasActiveNotes: Bool {
+        notes.contains { !$0.isDeleted }
+    }
+
     /// Every tag in use, one entry per tag, sorted.
     ///
     /// Deduplicated through `NoteModel.tagKey` rather than by exact text, so two

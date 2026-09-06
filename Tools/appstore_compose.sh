@@ -66,11 +66,12 @@ en_caption() {
     case "$1" in
         01-list)      printf 'Your notes.\nOn your phone.\nNowhere else.' ;;
         02-locked)    printf 'Lock a note\nbehind Face ID' ;;
-        03-drawing)   printf 'Sketch it\nwhen writing it\nwould take longer' ;;
-        04-checklist) printf 'Tick things off\ninside the note' ;;
+        03-drawing)   printf 'Sketch it faster\nthan you could\nwrite it' ;;
+        04-checklist) printf 'Check things off\ninside the note' ;;
         05-calendar)  printf 'Reminders that\nactually arrive' ;;
         06-map)       printf 'Every note remembers\nwhere you wrote it' ;;
         07-detail)    printf 'No ads. No account.\nNo subscription.' ;;
+        *)            echo "no caption for shot '$1'" >&2; exit 1 ;;
     esac
 }
 
@@ -78,11 +79,12 @@ cs_caption() {
     case "$1" in
         01-list)      printf 'Vaše poznámky.\nVe vašem telefonu.\nNikde jinde.' ;;
         02-locked)    printf 'Zamkněte poznámku\npod Face ID' ;;
-        03-drawing)   printf 'Nakreslete to,\nco by se psalo\ndéle' ;;
+        03-drawing)   printf 'Nakreslete to,\nco by se psalo\nzbytečně dlouho' ;;
         04-checklist) printf 'Odškrtávejte\npřímo v poznámce' ;;
         05-calendar)  printf 'Připomínky,\nkteré opravdu dorazí' ;;
         06-map)       printf 'Každá poznámka ví,\nkde vznikla' ;;
         07-detail)    printf 'Bez reklam. Bez účtu.\nBez předplatného.' ;;
+        *)            echo "no caption for shot '$1'" >&2; exit 1 ;;
     esac
 }
 

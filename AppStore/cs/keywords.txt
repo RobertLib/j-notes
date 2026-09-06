@@ -1,1 +1,1 @@
-poznámkový,blok,seznam,úkoly,připomínky,kreslení,heslo,zámek,soukromé,deník,widget,zdarma,mapa
+poznámkový,blok,seznam,úkoly,připomínky,kreslení,heslo,zámek,skica,deník,widget,zdarma,mapa,kalendář

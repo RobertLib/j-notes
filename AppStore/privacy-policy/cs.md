@@ -16,7 +16,7 @@ poznámky zůstávají ve vašem zařízení.
 žádné síťové požadavky. Není za ní žádný cloud, žádná synchronizace ani žádný
 server.
 
-**Žádné analytiky, žádné reklamy.** Aplikace neobsahuje reklamní sítě,
+**Žádné analytické nástroje, žádné reklamy.** Aplikace neobsahuje reklamní sítě,
 analytické nástroje ani knihovny třetích stran, které by cokoli odesílaly.
 
 **Žádné nákupy v aplikaci.** Aplikace neobsahuje in-app nákupy ani předplatné.
@@ -33,8 +33,8 @@ těchto dat zařízení neopouští. Zálohují se pouze v rámci vaší běžn�
 zařízení (iCloud nebo počítač), pokud ji máte zapnutou, a řídí se pak zásadami
 společnosti Apple. Odinstalováním aplikace se všechno z vašeho zařízení odstraní.
 
-**Zamčené poznámky.** Poznámku, kterou označíte jako chráněnou, odemknete přes
-Face ID, Touch ID nebo kódem zařízení. Ověření provádí iOS přímo v zařízení;
+**Zamčené poznámky.** Poznámku, kterou označíte jako chráněnou, odemknete pomocí
+Face ID, Touch ID nebo kódu zařízení. Ověření provádí iOS přímo v zařízení;
 aplikace nikdy nevidí vaše biometrické údaje a nikde není uložen žádný účet ani
 heslo.
 
@@ -57,8 +57,8 @@ záměrně dorazí na zamčenou obrazovku bez názvu i bez textu.
 systémovému dialogu sdílení a soubor se zálohou se uloží tam, kam si vyberete.
 Kam data poputují dál, rozhodujete vy a aplikace nebo služba, kterou zvolíte.
 
-**Děti.** Aplikace je hodnocena 4+. Protože nesbírá žádná data, nevznikají ani
-žádná data o osobách jakéhokoli věku.
+**Děti.** Aplikace má věkové hodnocení 4+. Protože nesbírá žádná data,
+nevznikají ani žádná data o osobách jakéhokoli věku.
 
 ## Změny těchto zásad
 
